@@ -19,7 +19,7 @@ def libcheck():
     # There's probably a better way to do this.
     global libup
     try:
-        requests.head("https://libgen.rocks/", timeout=8)
+        requests.head("https://libgen.rocks/", timeout=27)
         libup = True
     except (requests.exceptions.Timeout, requests.exceptions.ConnectionError) as err:
         print("Libgenrocks is down or too slow. Using 3lib for 30 minutes.")
@@ -73,7 +73,7 @@ def resolve_cover(md5):
             page = requests.get(_3lib, timeout=27)
     else:
 
-        page = requests.get(_3lib, timeout=8)
+        page = requests.get(_3lib, timeout=27)
 
     soup = BeautifulSoup(page.text, "html.parser")
     if libup:
