@@ -64,16 +64,16 @@ def resolve_cover(md5):
     # Tries librock, if it's down or too slow, uses 3lib instead.
     if libup:
         try:
-            print("Trying librock")
-            page = requests.get(librock, timeout=27)
+            page = requests.get(librock, timeout=60)
+            print(page)
 
         except (requests.exceptions.Timeout, requests.exceptions.ConnectionError) as err:
 
             libup = False
-            page = requests.get(_3lib, timeout=27)
+            page = requests.get(_3lib, timeout=60)
     else:
 
-        page = requests.get(_3lib, timeout=27)
+        page = requests.get(_3lib, timeout=60)
 
     soup = BeautifulSoup(page.text, "html.parser")
     if libup:
