@@ -17,7 +17,7 @@ def libcheck():
     # every x minutes, if it's down, the site should use 3lib instead.
     # Otherwise, every cover request would check if librocks is up, thus slowing down the books loading.
     # There's probably a better way to do this.
-    print("I'm working?")
+    print("I'm working")
     global libup
     try:
         requests.head("https://libgen.rocks/", timeout=27)

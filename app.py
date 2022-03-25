@@ -14,7 +14,10 @@ app.secret_key = urandom(32)
 
 @app.route('/')
 def hello_world():  # put application's code here
+    threading.Timer(1800, libcheck).start()
     print(threading.enumerate())
+    print(threading.active_count())
+
     return render_template("index.html")
 
 
@@ -75,5 +78,4 @@ def about():
 
 
 if __name__ == '__main__':
-    threading.Timer(1800, libcheck).start()
     app.run(debug=True)
