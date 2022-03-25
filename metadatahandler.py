@@ -64,12 +64,12 @@ def resolve_cover(md5):
     if libup:
         try:
             print("Trying librock")
-            page = requests.get(librock, timeout=8)
+            page = requests.get(librock, timeout=27)
 
         except (requests.exceptions.Timeout, requests.exceptions.ConnectionError) as err:
 
             libup = False
-            page = requests.get(_3lib, timeout=8)
+            page = requests.get(_3lib, timeout=27)
     else:
 
         page = requests.get(_3lib, timeout=8)
