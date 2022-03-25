@@ -66,6 +66,11 @@ def newhere():
     return render_template("newhere.html")
 
 
+@app.route('/about')
+def about():
+    return render_template("about.html")
+
+
 if __name__ == '__main__':
     Timer(1800, libcheck).start()
     app.run(debug=True)
