@@ -54,6 +54,7 @@ def resolve_cover(md5):
     # 1500-2000ms between each call is probably safe.
     # It also scrapes for 3lib if librock is down.
     # I personally believe it's better to send an empty cover than to keep the user waiting.
+    # Since I'm using heroku's free tier as a hosting solution, the timeout needs a lot of headroom
 
     global libup
     librock = "https://libgen.rocks/ads.php?md5=" + md5
