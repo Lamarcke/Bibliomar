@@ -21,8 +21,9 @@ def libcheck():
     try:
         requests.head("https://libgen.rocks/", timeout=27)
         libup = True
-    except (requests.exceptions.Timeout, requests.exceptions.ConnectionError) as err:
-        print("Libgenrocks is down or too slow. Using 3lib for 30 minutes.")
+    except (requests.exceptions.Timeout, requests.exceptions.ConnectionError, requests.exceptions.HTTPError) as err:
+        print(err)
+        print("Libgenrocks is down, too slow or can't handle the request. Using 3lib.")
         libup = False
 
 
@@ -64,16 +65,15 @@ def resolve_cover(md5):
     # Tries librock, if it's down or too slow, uses 3lib instead.
     if libup:
         try:
-            page = requests.get(librock, timeout=60)
-            print(page)
+            page = requests.get(librock, timeout=27)
 
-        except (requests.exceptions.Timeout, requests.exceptions.ConnectionError) as err:
-
+        except (requests.exceptions.Timeout, requests.exceptions.ConnectionError, requests.exceptions.HTTPError) as err:
+            print(err)
             libup = False
-            page = requests.get(_3lib, timeout=60)
+            page = requests.get(_3lib, timeout=27)
     else:
 
-        page = requests.get(_3lib, timeout=60)
+        page = requests.get(_3lib, timeout=27)
 
     soup = BeautifulSoup(page.text, "html.parser")
     if libup:

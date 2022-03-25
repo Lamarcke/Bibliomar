@@ -1,8 +1,10 @@
+import threading
+
 from flask import Flask, render_template, request, make_response, abort, redirect, session, url_for
 from metadatahandler import resolve_cover, resolve_metadata, libcheck
 from search import search_handler
 from os import urandom
-from threading import Timer
+import threading
 
 import json
 
@@ -72,5 +74,6 @@ def about():
 
 
 if __name__ == '__main__':
-    Timer(1800, libcheck).start()
+    threading.Timer(1800, libcheck).start()
+    print(threading.enumerate())
     app.run(debug=True)
