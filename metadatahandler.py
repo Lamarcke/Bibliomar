@@ -17,9 +17,9 @@ def libcheck():
     # to just run this every search call. It's more resource-heavy tho.
     global libup
     try:
-        requests.head("https://libgen.rocks/", timeout=(3, 24))
+        requests.head("https://libgen.rocks/", timeout=(5, 24))
         libup = True
-        print("Libgenrocks if fine.")
+        print("Libgenrocks is fine.")
     except (requests.exceptions.Timeout, requests.exceptions.ConnectionError, requests.exceptions.HTTPError) as err:
         print(err)
         print("Libgenrocks is down, too slow or can't handle the request. Using 3lib.")
@@ -68,7 +68,7 @@ def resolve_cover(md5):
         page = requests.get(_3lib, timeout=27)
 
     soup = BeautifulSoup(page.text, "html.parser")
-    
+
     if libup:
         try:
             cover = soup.find("img", src=True)

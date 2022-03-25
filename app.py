@@ -11,10 +11,6 @@ app.secret_key = urandom(32)
 
 @app.route('/')
 def hello_world():  # put application's code here
-    threading.Timer(5, libcheck).start()
-    print(threading.enumerate())
-    print(threading.active_count())
-
     return render_template("index.html")
 
 
@@ -31,6 +27,9 @@ def cover(md5):
 
 @app.route('/search', methods=["GET", "POST"])
 def search():
+    # Checks if libraryrocks is down when the user searchs. It will then be used by the
+    # cover service.
+    libcheck()
     list_ = search_handler(request.get_json())
     if list_ is None:
         print("List is none on endpoint.")
@@ -75,4 +74,4 @@ def about():
 
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run()
