@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ book_info["title"] }} - Bibliomar</title>
+    <meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Font Awesome -->
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css"
+      rel="stylesheet"
+    />
+    <!-- Google Fonts -->
+    <link
+      href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap"
+      rel="stylesheet"
+    />
+    <!-- MDB -->
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/3.10.2/mdb.min.css"
+      rel="stylesheet"
+    />
+    <style>
+
+        .cover-img{
+            width: 75vw;
+            height: 50vh;
+        }
+
+        .bg{
+            background-image: url('/static/img/layered-waves-haikei (2).svg');
+            background-size: cover;
+        }
+
+        .break{
+            border: 0;
+            margin: 0;
+            height: 0;
+            padding: 0;
+            flex-basis: 100%;
+        }
+
+        @media screen and (min-width: 600px){
+            .bg{
+                background-image: url("/static/img/back-lg-2.svg");
+                background-size: cover;
+            }
+
+            .cover-img{
+                width: 95%;
+                height: 70%;
+                margin-bottom: 5vh;
+            }
+
+        }
+    </style>
+</head>
+<body class="bg">
+
+<div class="container-fluid d-flex flex-wrap justify-content-center">
+    <div class="row">
+        <div class="col text-center">
+            <img src="../static/img/bibliologo.png" alt="">
+        </div>
+    </div>
+    <div class="break"></div>
+    <div class="row">
+        <div class="col text-center text-light lead mb-3">
+            <h6>Obrigado por escolher o Bibliomar!</h6>
+        </div>
+
+    </div>
+    <div class="break"></div>
+
+    <section class="ms-lg-5 w-75">
+        <div class="row">
+            <div class="col-lg-6 col-12 d-flex justify-content-center">
+                <img src="{{ book_info["cover"] }}" alt="https://libgen.rocks/img/blank.png" class="cover-img">
+            </div>
+            <div class="col-lg-6 col-12 mt-5 mt-lg-0 d-flex flex-row flex-wrap align-content-start text-light lead">
+                <div class="lead">
+                    <span class="fw-bold">Título: </span>
+                    <p>{{ book_info["title"] }}</p>
+                </div>
+
+                <div class="break"></div>
+
+                <div class="lead">
+                    <span class="fw-bold">Autor(a): </span>
+                    <p>{{ book_info["authors"] }}</p>
+                </div>
+
+                <div class="break"></div>
+
+                <div class="lead">
+                    <span class="fw-bold">Linguagem: </span>
+                    <p>{{ book_info["language"] }}</p>
+                </div>
+
+                <div class="break"></div>
+
+                <div class="lead">
+                    <span class="fw-bold">Arquivo: </span>
+                    <p>{{ book_info["extension"] }}, {{ book_info["size"] }}</p>
+                </div>
+
+                <div class="break"></div>
+
+                <div class="lead">
+                    <span class="fw-bold">Descrição: </span>
+                    <p>{{ book_desc }}</p>
+                </div>
+
+                <div class="break"></div>
+
+                <div class="">
+                    <p class="lead fw-bold">Escolha um servidor para download:</p>
+                    <div class="d-flex flex-row flex-wrap justify-content-start">
+                        <a class="btn btn-primary btn-rounded mb-1" href="{{ d_links["GET"] }}">
+                        GET
+                    </a>
+                    <a class="btn btn-primary btn-rounded mb-1" href="{{ d_links["Cloudflare"] }}">
+                        Cloudflare
+                    </a>
+                    <a class="btn btn-primary btn-rounded mb-1" href="{{ d_links["IPFS.io"] }}">
+                        IPFS.io
+                    </a>
+                    <div class="break"></div>
+                    <a class="btn btn-primary btn-rounded mb-1" href="{{ d_links["Infura"] }}">
+                        Infura
+                    </a>
+                    <a class="btn btn-primary btn-rounded mb-1" href="{{ d_links["Infura"] }}">
+                        Pinata
+                    </a>
+                    </div>
+
+
+                </div>
+
+                <div class="break"></div>
+                <p class="text-muted">Baixei meu livro, <a class="text-secondary" href="/newhere">e agora?</a></p>
+                <div class="break"></div>
+
+
+
+            </div>
+            
+        </div>
+
+    </section>
+
+
+</div>
+
+<!-- MDB -->
+<script
+  type="text/javascript"
+  src="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/3.10.2/mdb.min.js"
+></script>
+</body>
+</html>

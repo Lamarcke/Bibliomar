@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!---
+    Visão:
+    Bibliomar é um projeto sem fins lucrativos, o objetivo é ser o mais pessoal possivel, estabelecendo uma "conversa"
+    entre o usuario e o website. Minimalismo é o foco, este é um site sobre livros, e assim deve continuar.
+
+    Vision:
+    Bibliomar is a free non-lucrative project. the goal is to get as close as possible to the end user, stabilishing
+    some king of "talk". Minimalist at it's core, it should be useful for all kinds
+    of users. It's about books. and it should stay that way.
+
+     --->
+    <meta charset="UTF-8">
+    <title>Bibliomar</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+    <!-- Font Awesome -->
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css"
+      rel="stylesheet"
+    />
+    <!-- Google Fonts -->
+    <link
+      href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap"
+      rel="stylesheet"
+    />
+    <!-- MDB -->
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/3.10.2/mdb.min.css"
+      rel="stylesheet"
+    />
+    <style>
+
+        .disclaimer{
+            width: 80vw;
+        }
+
+        .break{
+            border: 0;
+            margin: 0;
+            height: 0;
+            padding: 0;
+            flex-basis: 100%;
+        }
+
+        .bg{
+            background: linear-gradient(#231B40, #5948c6) no-repeat fixed center center;
+            background-size: cover;
+
+        }
+
+        .resultimg{
+            width: 90vw;
+            height: auto;
+        }
+
+        .bookcaption{
+            width: 90vw;
+        }
+
+        @media screen and (min-width: 600px){
+            .resultimg{
+                width: 25vw;
+                height: 70vh;
+                margin-right: 7px;
+            }
+
+            .bookcaption{
+                width: 25vw;
+            }
+
+            .disclaimer{
+                width: 40vw;
+            }
+        }
+
+    </style>
+</head>
+<body class="bg">
+
+
+<div class="container text-light">
+    <!--- Header div --->
+
+    <div class="row">
+        <div class="col text-center">
+            <img src="../static/img/bibliologo.png" alt="">
+        </div>
+    </div>
+    <div class="row">
+        <div class="col text-center">
+            <h6 class="lead mb-7 ">Aos leitores ávidos e aos iniciantes: <br>
+            Nossas mais sinceras boas-vindas.</h6>
+        </div>
+    </div>
+    <form id="searchform" class="">
+        <div class="row d-flex flex-row justify-content-center">
+            <div class="col-lg-3 col-4">
+                <div id="format" class="">
+                    <label for="format">Formato do arquivo:</label>
+                    <div class="form-check form-check-inline">
+                        <input id="formatepub" value="epub" class="form-check-input" name="format" type="radio" checked>
+                        <label for="formatepub">EPUB</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <input id="formatpdf" value="pdf" class="form-check-input" name="format" type="radio">
+                        <label for="formatpdf">PDF</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <input id="formatpdf" value="mobi" class="form-check-input" name="format" type="radio">
+                        <label for="formatpdf">MOBI</label>
+                    </div>
+
+                </div>
+
+            </div>
+
+            <div class="col-lg-3 col-4">
+                <div id="searchby" class="">
+                    <label for="searchby">Pesquisar por:</label>
+                    <div class="form-check form-check-inline">
+                        <input type="radio" value="title" class="form-check-input" name="searchby" id="searchbytitle" checked>
+                        <label for="searchbytitle">Título</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <input type="radio" value="author" class="form-check-input" name="searchby" id="searchbyauthor">
+                        <label for="searchbyauthor">Autor</label>
+                    </div>
+
+                </div>
+
+            </div>
+
+
+
+        </div>
+
+        <div class="row mt-4 d-flex flex-row justify-content-center">
+
+            <div class="col-lg-3 col-5">
+                <div id="searchcat" class="">
+
+                    <label class="" for="searchcat">Categoria:</label>
+                    <div class="form-check form-check-inline">
+                        <input type="radio" value="sci-tech" class="form-check-input" name="searchcat" id="searchcatnonfiction" checked>
+                        <label for="searchcatnonfiction">Não-ficção</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <input type="radio" value="fiction" class="form-check-input" name="searchcat" id="searchcatfiction">
+                        <label for="searchcatfiction">Ficção</label>
+                    </div>
+
+                </div>
+            </div>
+
+            <div class="col-lg-3 col-4">
+
+                <label class="" for="searchlang">Linguagem:</label>
+
+                <select class="form-control form-select-sm" name="searchlang" id="searchlang">
+
+                    <option value="portuguese" selected>Português</option>
+                    <option value="english">Inglês</option>
+
+                </select>
+
+            </div>
+
+        </div>
+
+        <div class="row mt-5 d-flex flex-wrap flex-row justify-content-lg-end justify-content-center">
+            <div class="col-10">
+                <div class="input-group">
+                    <div class="form-outline w-75">
+                        <input type="search" id="searchfield" class="form-control text-light">
+                        <label class="form-label text-light" for="searchfield">Procurar livro</label>
+                    </div>
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-search"></i>
+                    </button>
+                </div>
+
+            </div>
+        </div>
+    </form>
+
+    <div id="resultsrow" class="row">
+
+
+    </div>
+    <div class="row mt-5">
+        <div class="col d-flex flex-row justify-content-center">
+            <a id="newhere" class="btn btn-secondary" href="/newhere">Sou novo aqui</a>
+        </div>
+    </div>
+
+    <div class="row mt-5 mb-5">
+        <div class="col mt-5 d-flex flex-wrap justify-content-center">
+            <p class="mt-5 text-muted disclaimer">
+                O Bibliomar é um projeto educacional de incentivo a leitura. <br>
+                Não distribuimos nenhuma cópia, texto, ou arquivo de qualquer conteúdo.<br>
+                Todos os arquivos aqui disponibilizados são de autoria de terceiros, com todos os direitos reservados,
+                e não estão hospedados em nossos servidores.<br><br>
+                Para entender mais sobre o projeto, clique <a href="/about">aqui</a>
+                Nosso código é aberto e pode ser visualizado a qualquer momento <a href="">aqui</a>.
+            </p>
+            <div class="break"></div>
+
+        </div>
+    </div>
+
+</div>
+
+</body>
+<!-- MDB -->
+<script
+  type="text/javascript"
+  src="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/3.10.2/mdb.min.js"
+></script>
+<script src="../static/js/main.js"></script>
+
+</html>

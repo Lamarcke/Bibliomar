@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Sou novo aqui - Bibliomar</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+    <!-- Font Awesome -->
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css"
+      rel="stylesheet"
+    />
+    <!-- Google Fonts -->
+    <link
+      href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap"
+      rel="stylesheet"
+    />
+    <!-- MDB -->
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/3.10.2/mdb.min.css"
+      rel="stylesheet"
+    />
+
+    <style>
+
+        #accordionfaq{
+            width: 99vw;
+        }
+
+        .break{
+            border: 0;
+            margin: 0;
+            height: 0;
+            padding: 0;
+            flex-basis: 100%;
+        }
+
+        .bg{
+            background: linear-gradient(#231B40, #5948c6) no-repeat fixed center center;
+            background-size: cover;
+        }
+
+        @media screen and (min-width: 600px) {
+            .bg {
+                background-image: url("/static/img/back-lg-2.svg");
+                background-size: cover;
+            }
+
+            #accordionfaq{
+                width: 85vw;
+            }
+        }
+    </style>
+
+</head>
+<body class="bg">
+
+<div class="containertext-light"></div>
+
+<div class="row">
+    <div class="row">
+        <div class="col text-center">
+            <img src="../static/img/bibliologo.png" alt="">
+        </div>
+    </div>
+    <div class="row">
+        <div class="col text-center">
+            <h6 class="lead mb-7 text-secondary fw-bold">Perguntas Frequentes</h6>
+        </div>
+    </div>
+</div>
+
+<div class="accordion offset-lg-1" id="accordionfaq">
+    <div class="row mb-2">
+        <div class="col">
+            <div class="accordion-item">
+                <h2 class="accordion-header" id="headingOne">
+                    <button
+                    class="accordion-button"
+                    type="button"
+                    data-mdb-toggle="collapse"
+                    data-mdb-target="#collapseOne"
+                    aria-expanded="true"
+                    aria-controls="collapseOne"
+                  >
+                    Como eu faço para encontrar meu livro?
+                  </button>
+                </h2>
+
+                <div id="collapseOne" class="accordion-collapse collapse" aria-labelledby="headingOne" data-mdb-parent="accordionfaq">
+                  <div class="accordion-body">
+                      <p><strong>1.</strong> Você deve escolher um formato para seu arquivo. Para entender qual o melhor
+                      formato para você, veja "Qual formato devo baixar?".</p>
+                      <p><strong>2.</strong> Você escolhe se quer pesquisar pelo título de algum livro ou artigo, ou
+                      pesquisar por um autor(es) em específico.</p>
+                      <p><strong>3.</strong> Você deve escolher se quer pesquisar por ficção ou não-ficção. Para entender
+                      melhor em qual categoria seu texto se encontra, leia "Ficção ou não-ficção, eis a questão."</p>
+                      <p><strong>4.</strong> Você escolhe a linguagem do texto que você procura.</p>
+                      <br>
+                      <p>Você pode tirar mais dúvidas lendo o resto da página, mas nós tentamos deixar o site o mais
+                      intuitivo possível. Lembrando que estamos sempre abertos a sugestões e perguntas. Basta entrar
+                      em contato pelo e-mail.</p>
+
+
+
+
+                  </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <div class="row mb-2">
+        <div class="col">
+            <div class="accordion-item">
+                <h2 class="accordion-header" id="headingTwo">
+                    <button
+                    class="accordion-button"
+                    type="button"
+                    data-mdb-toggle="collapse"
+                    data-mdb-target="#collapseTwo"
+                    aria-expanded="false"
+                    aria-controls="collapseTwo"
+                  >
+                    Qual formato devo baixar?
+                  </button>
+                </h2>
+
+                <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo" data-mdb-parent="accordionfaq">
+                  <div class="accordion-body">
+                      <span class="fw-bold lead">EPUB: </span>
+                      <p>Essa é a opção recomendada, se você procura ler livros digitalmente, esse é
+                      o principal formato feito para isso, nele você consegue usufruir de funções como visualização que se
+                      adapta a sua tela, temas (dependendo do seu aplicativo) e fontes personalizadas. E o principal: chega
+                      de ter que ficar dando zoom toda hora igual no PDF.</p>
+                      <span class="fw-bold lead">PDF: </span>
+                      <p>Essa é a segunda melhor opção, a maior vantagem deste formato é que você pode abrir ele em praticamente
+                      qualquer computador ou celular moderno. Se você tem algum navegador moderno no seu dispositivio, ele provavelmente
+                      roda PDF nativamente. A maior desvantagem é o PDF ser um formato estático, ou seja, ele não se adapta a sua tela.
+                      Isso significa que você vai ter que ler seu arquivo usando da ferramenta de zoom.</p>
+                      <span class="fw-bold lead">MOBI: </span>
+                      <p>Esse é o formato recomendado para ler em um Kindle. Leia "Baixei meu livro, e agora?"
+                          para entender como funciona.</p>
+                      <br>
+                      <p>Agora que você tem uma ideia geral sobre os formatos, basta baixar seu livro e ler a seção "Como faço para ler
+                      meu livro?".</p>
+
+                  </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <div class="row mb-2">
+        <div class="col">
+            <div class="accordion-item">
+                <h2 class="accordion-header" id="headingThree">
+                    <button
+                    class="accordion-button"
+                    type="button"
+                    data-mdb-toggle="collapse"
+                    data-mdb-target="#collapseThree"
+                    aria-expanded="false"
+                    aria-controls="collapseThree"
+                  >
+                    Ficção ou não-ficção, eis a questão.
+                  </button>
+                </h2>
+
+                <div id="collapseThree" class="accordion-collapse collapse" aria-labelledby="headingThree" data-mdb-parent="accordionfaq">
+                  <div class="accordion-body">
+                      <span>No Bibliomar, você precisa selecionar uma categoria para fazer sua pesquisa.</span>
+                      <p>Isso se trata de uma "limitação" (que ajuda na organização) do próprio LibraryGenesis,
+                          que o Bibliomar usa como base.</p>
+
+                      <p class="fw-bold lead">Como eu sei se meu livro é ficção ou não?</p>
+                      <p>Em termos simples, se seu livro ou texto se encaixa na categoria de: romance,
+                          aventura, comédia ou gêneros semelhantes, ele provavelmente é ficção.
+                      </p>
+                      <p>Caso ele se trate de uma bibliográfia, artigo ou livro de auto-ajuda, provavelmente ele não é
+                      ficção.</p>
+                      <br>
+                      <p>Caso você não encontre um livro em certa categoria, vale a pena verificar na outra. Basta
+                      trocar a categoria e pesquisar novamente.</p>
+
+
+                  </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <div class="row mb-2">
+        <div class="col">
+            <div class="accordion-item">
+                <h2 class="accordion-header" id="headingFour">
+                    <button
+                    class="accordion-button"
+                    type="button"
+                    data-mdb-toggle="collapse"
+                    data-mdb-target="#collapseFour"
+                    aria-expanded="false"
+                    aria-controls="collapseFour"
+                  >
+                    Baixei meu livro, e agora?
+                  </button>
+                </h2>
+
+                <div id="collapseFour" class="accordion-collapse collapse" aria-labelledby="headingFour" data-mdb-parent="accordionfaq">
+                  <div class="accordion-body">
+                      <span class="lead">Agora vem a parte boa, você abre seu arquivo e começa a leitura em qualquer dispositivo.</span>
+                      <p>Porém, dependendo do formato que você baixou, pode ser necessário o uso de algum programa de terceiros:</p>
+                      <br>
+                      <span class="lead">Baixei um arquivo <strong>PDF</strong>.</span>
+                      <p>Nesse caso, basta abrir o arquivo no seu computador ou celular, qualquer navegador moderno oferece
+                      suporte nativo a PDF.</p>
+                      <span class="lead">Baixei um arquivo <strong>EPUB</strong>.</span>
+                      <p>Então você precisa baixar um leitor ePub para seu dispositivo. Se você estiver em um computador,
+                      recomandamos usar o <a href="https://calibre-ebook.com/download">Calibre</a>, disponivel para Windows, MAC,
+                          Linux, etc.<br>
+                          Caso você esteja em um celular Android, recomendamos baixar o
+                          <a href="https://play.google.com/store/apps/details?id=org.readera&hl=pt_BR&gl=US">ReadEra</a>,
+                          um aplicativo gratuito que lê diversos formatos de arquivo, inclusive ePub. Já para iOS,
+                          existem <a href="https://beebom.com/best-epub-readers-ipad-iphone/">diversas opções</a>.
+                      </p>
+                      <p>Obviamente, outras opções existem para cada plataforma, basta dar uma pesquisada e testar
+                          qual a melhor para você.</p>
+                      <span class="lead">Baixei um arquivo <strong>MOBI</strong>.</span>
+                      <p>Se você baixou um arquivo Mobi, você provavelmente quer enviar para o seu Kindle, basta seguir
+                          <a href="https://www.digitalbook.io/blog/pt/como-enviar-ebooks-para-o-seu-kindle/">esse</a>
+                          tutorial para aprender como fazer isso.</p>
+                      <p>Caso você esteja usando um e-leitor diferente do Kindle, você precisa verificar quais formatos
+                      seu dispositivo suporta (geralmente olhando o site da fabricante ou pesquisando na internet).
+                      Alguns leitores têm suporte nativo para PDF, outros suportam até mesmo ePub diretamente.
+                      Depois disso, é só pesquisar na internet como enviar o arquivo para seu dispositivo.</p>
+
+                  </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <div class="row mb-2">
+        <div class="col">
+            <div class="accordion-item">
+                <h2 class="accordion-header" id="headingFour">
+                    <button
+                    class="accordion-button"
+                    type="button"
+                    data-mdb-toggle="collapse"
+                    data-mdb-target="#collapseFive"
+                    aria-expanded="false"
+                    aria-controls="collapseFive"
+                  >
+                    Ainda tenho alguma dúvida ou sugestão.
+                  </button>
+                </h2>
+
+                <div id="collapseFive" class="accordion-collapse collapse" aria-labelledby="headingFive" data-mdb-parent="accordionfaq">
+                  <div class="accordion-body">
+                      <p>Nesse caso, basta enviar um e-mail para nós.
+                      Sugestões e críticas construtivas também são bem-vindas.
+                      <br>
+                      Clique <a href="mailto:cassiolamarcksilvafreitas@gmail.com">aqui</a> para enviar o e-mail. <br>
+                      <span class="text-muted fst-italic">(Isso vai abrir seu cliente de e-mail padrão.)</span>
+                      </p>
+                      <p>Caso você se interesse, pode aprender mais sobre o projeto <a href="/about">aqui.</a>
+                      E caso você seja um desenvolvedor, nosso código é aberto e pode ser encontrado <a href="">aqui</a>.
+                      </p>
+
+                  </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+</div>
+
+</body>
+
+<!-- MDB -->
+<script
+  type="text/javascript"
+  src="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/3.10.2/mdb.min.js"
+></script>
+
+</html>
