@@ -13,15 +13,13 @@ libup = True
 # The functions are separate to limit the numbers of scrapes on links.
 
 def libcheck():
-    # This function runs on a separate thread to check if librocks is down or slow
-    # every x minutes, if it's down, the site should use 3lib instead.
-    # Otherwise, every cover request would check if librocks is up, thus slowing down the books loading.
-    # There's probably a better way to do this.
-    print("I'm working")
+    # This function checks if libgen is down. For some reason I was using threads for this, but it's better
+    # to just run this every search call. It's more resource-heavy tho.
     global libup
     try:
-        requests.head("https://libgen.rocks/", timeout=27)
+        requests.head("https://libgen.rocks/", timeout=(3, 24))
         libup = True
+        print("Libgenrocks if fine.")
     except (requests.exceptions.Timeout, requests.exceptions.ConnectionError, requests.exceptions.HTTPError) as err:
         print(err)
         print("Libgenrocks is down, too slow or can't handle the request. Using 3lib.")
@@ -65,22 +63,15 @@ def resolve_cover(md5):
 
     # Tries librock, if it's down or too slow, uses 3lib instead.
     if libup:
-        try:
-            page = requests.get(librock, timeout=27)
-
-        except (requests.exceptions.Timeout, requests.exceptions.ConnectionError, requests.exceptions.HTTPError) as err:
-            print(err)
-            libup = False
-            page = requests.get(_3lib, timeout=27)
+        page = requests.get(librock, timeout=27)
     else:
-
         page = requests.get(_3lib, timeout=27)
 
     soup = BeautifulSoup(page.text, "html.parser")
+    
     if libup:
         try:
             cover = soup.find("img", src=True)
-            print(cover)
             return "https://libgen.rocks" + cover["src"]
         except KeyError:
             return None

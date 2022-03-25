@@ -1,11 +1,8 @@
-import threading
-
-from flask import Flask, render_template, request, make_response, abort, redirect, session, url_for
+from flask import Flask, render_template, request, make_response, abort, session
 from metadatahandler import resolve_cover, resolve_metadata, libcheck
 from search import search_handler
 from os import urandom
 import threading
-
 import json
 
 app = Flask(__name__)
@@ -14,7 +11,7 @@ app.secret_key = urandom(32)
 
 @app.route('/')
 def hello_world():  # put application's code here
-    threading.Timer(1800, libcheck).start()
+    threading.Timer(5, libcheck).start()
     print(threading.enumerate())
     print(threading.active_count())
 
