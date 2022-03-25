@@ -64,6 +64,7 @@ def resolve_cover(md5):
     # Tries librock, if it's down or too slow, uses 3lib instead.
     if libup:
         page = requests.get(librock, timeout=27)
+        print(page)
     else:
         page = requests.get(_3lib, timeout=27)
 
@@ -71,7 +72,8 @@ def resolve_cover(md5):
 
     if libup:
         try:
-            cover = soup.find("img", src=True)
+            cover = soup.find("img")
+            print(cover)
             return "https://libgen.rocks" + cover["src"]
         except KeyError:
             return None
