@@ -10,7 +10,7 @@ app.secret_key = urandom(32)
 
 
 @app.route('/')
-def hello_world():  # put application's code here
+def index():
     return render_template("index.html")
 
 
