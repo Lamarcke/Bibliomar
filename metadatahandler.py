@@ -68,6 +68,7 @@ def resolve_cover(md5):
         except requests.exceptions.HTTPError:
             print("Librocks is down, even if libcheck didn't say so.")
             page = requests.get(_3lib, timeout=27)
+            libup = False
 
     else:
         page = requests.get(_3lib, timeout=27)
