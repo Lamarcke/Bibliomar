@@ -79,13 +79,11 @@ def resolve_cover(md5):
 
     else:
         page = requests.get(_3lib, timeout=27)
-    print(page)
     soup = BeautifulSoup(page.text, "html.parser")
 
     if libup:
         try:
             cover = soup.find("img")
-            print(cover)
             return "https://libgen.rocks" + cover["src"]
         except KeyError:
             return None

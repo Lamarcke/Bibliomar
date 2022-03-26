@@ -86,12 +86,14 @@ def libsearch(query: str, format_: str, searchby: str, searchcat: str, searchlan
     else:
         # if searchcat == "sci-tech"
         # "res" stands for results per page.
+        # Page is going to be used if the filtered results returns none.
+        # Page must be a string.
         params = {
             "q": query,
             "language": lang,
             "format": format_,
             "column": searchby,
-            "res": "25"
+            "res": "100"
         }
 
     try:
@@ -110,6 +112,8 @@ def libsearch(query: str, format_: str, searchby: str, searchcat: str, searchlan
 
     # Returns filtered results
     if searchcat == "fiction":
-        return fiction_filter(lbr, searchcat)
+        filtered_results = fiction_filter(lbr, searchcat)
+        return filtered_results
     else:
-        return nonfiction_filter(lbr, format_, searchcat, searchlang)
+        filtered_results = nonfiction_filter(lbr, format_, searchcat, searchlang)
+        return filtered_results

@@ -1,24 +1,51 @@
 
 
-/* Deletes result div, basically */
+/* Deletes result and pagination div, basically */
 const clearResultsDiv = () => {
-
     try{
-        let resultsdiv = document.getElementById("resultsdiv")
-        resultsdiv.remove()
+        let resultsDiv = document.getElementById("resultsdiv");
+        resultsDiv.remove();
+
     }catch (e){
         if (e === TypeError){
-            return console.log("ResultsDiv already empty.")
+            return console.log("ResultsDiv already empty.");
         }
     }
 
 }
 
+const clearPaginationDiv = () => {
+    try{
+        let paginationDiv = document.getElementById("paginationdiv");
+        paginationDiv.remove();
+
+
+    }catch (e){
+        if (e === TypeError){
+            return console.log("PaginationDiv already empty.");
+        }
+    }
+}
+
+/* Disables author search for non-fiction */
+const authorSearchHandler = () => {
+    searchCatFiction.addEventListener("click", () => {
+        searchByAuthorInput.disabled = false
+        searchByAuthorLabel.className = ""
+
+    })
+
+    searchCatNonFiction.addEventListener("click", () => {
+        searchByAuthorInput.disabled = true
+        searchByAuthorLabel.className = "text-muted"
+    })
+}
 
 /* Surprisingly, handles errors. */
 const errorHandler = (er) => {
 
     clearResultsDiv();
+    clearPaginationDiv();
     let resultsdiv = document.createElement("div");
     resultsdiv.id = "resultsdiv";
     resultsdiv.className = "d-flex flex-row flex-wrap justify-content-center";
@@ -29,9 +56,16 @@ const errorHandler = (er) => {
         errorP.className = "text-warning mt-5";
         errorP.innerText = "Opa, não consegui encontrar nada com esses termos. Que tal procurar em outra categoria ou formato?";
     }
+
     else if (er.status === 500){
         errorP.className = "text-danger mt-5";
         errorP.innerText = "Ops, algo deu errado. Verifique sua conexão e tente novamente.";
+
+    }
+
+    else{
+        errorP.className = "text-danger mt-5";
+        errorP.innerText = "Ops, algo deu errado.";
 
     }
 
@@ -75,7 +109,7 @@ const moreInfoHandler = (moreInfoElement, bookInfo) => {
     })
 }
 
-const dataHandler = async (data) => {
+const resultsHandler = async (data, lengthStart, lengthEnd) => {
     clearResultsDiv();
     /* Only removes the newhere button if the query returns something */
     newhere.remove();
@@ -96,12 +130,14 @@ const dataHandler = async (data) => {
     let loadingSpinner = document.createElement("p");
     loadingSpinner.className = "spinner-border";
     loadingDiv.append(loadingP, loadingBreak, loadingSpinner);
-
+    let break_ = document.createElement("div");
+    break_.className = "break";
+    resultsdiv.append(break_);
     const sleep = ms => new Promise(r => setTimeout(r, ms));
     let bookInfo;
-    for (let i = 0; i < data.length; i++) {
+    for (let i = lengthStart; i < lengthEnd; i++) {
         if (i % 3 === 0) {
-            /* Every three iterations, execute this code that shows 3 books per line. */
+            /* Every three iterations, and on the first one, execute this code that adds a break every 3 books. */
             /* Useful for desktop, mobile adds breaks after each book. */
             let break_ = document.createElement("div");
             break_.className = "break";
@@ -181,10 +217,73 @@ const dataHandler = async (data) => {
     loadingP.innerText = "Tudo pronto. Boa leitura!"
     setTimeout(() => loadingDiv.remove(), 5000)
 
-
 }
 
+const paginationHandler = (data) => {
+    /* Shows pagination div */
+    clearResultsDiv();
+    clearPaginationDiv();
+    let paginationDiv = document.createElement("div");
+    paginationDiv.id = "paginationdiv"
+    paginationDiv.className = "d-flex flex-row justify-content-center";
+    let paginationNav = document.createElement("nav");
+    let paginationUl = document.createElement("ul");
+    paginationUl.className = "pagination";
+    paginationRow.append(paginationDiv);
+    paginationDiv.append(paginationNav)
+    paginationNav.append(paginationUl)
+    let pn = 0;
 
+    for (let x = 0; x < data.length; x++){
+
+        /* If x is equal to 0, or is divisible by 10. */
+        if (x === 0 || x % 10 === 0){
+            /* This runs every 11 iterations. */
+            pn += 1;
+            let paginationLi = document.createElement("li");
+            if (x === 0){
+                paginationLi.className = "page-item active";
+            }else{
+                paginationLi.className = "page-item"
+            }
+
+            let paginationA = document.createElement("a")
+            paginationA.className = "page-link text-light paginationlinks"
+            paginationA.innerText = `${pn}`
+            paginationA.addEventListener("click", () => {
+                /* Removes the active class from all other pages */
+                let pageItems = Array.from(document.getElementsByClassName("page-item"))
+                pageItems.forEach((el) => {
+                    el.className = "page-item"
+                })
+
+                let lengthE = x + 10
+                if (lengthE >= data.length){
+                lengthE = data.length;
+                }
+
+                /* Changes this element's class to active.
+                * Since pn starts at 1 */
+                let thisPageIndex = x / 10
+                let thisPage = pageItems[thisPageIndex]
+                thisPage.className = "page-item active"
+                return resultsHandler(data, x, lengthE)
+            })
+
+            paginationUl.append(paginationLi);
+            paginationLi.append(paginationA);
+
+        }
+    }
+
+    let lengthE = 10
+    if (lengthE >= data.length){
+        lengthE = data.length;
+    }
+    /* Renders the first page. */
+    return resultsHandler(data, 0, lengthE)
+
+}
 
 const searchHandler = (evt) => {
     evt.preventDefault();
@@ -214,7 +313,6 @@ const searchHandler = (evt) => {
         searchcat: formData.get("searchcat"),
         searchlang: formData.get("searchlang"),
         query: searchFieldValue
-
     }
 
     fetch("/search", {
@@ -230,7 +328,7 @@ const searchHandler = (evt) => {
         return errorHandler(r)
     }).then((data) => {
         if (data !== undefined){
-            return dataHandler(data);
+            return paginationHandler(data);
         }
     })
 
@@ -239,8 +337,14 @@ const searchHandler = (evt) => {
 let searchForm = document.getElementById("searchform");
 let searchField = document.getElementById("searchfield");
 let resultsRow = document.getElementById("resultsrow");
-let newhere = document.getElementById("newhere")
+let newhere = document.getElementById("newhere");
+let paginationRow = document.getElementById("paginationrow");
+let searchCatFiction = document.getElementById("searchcatfiction");
+let searchCatNonFiction = document.getElementById("searchcatnonfiction");
+let searchByAuthorInput = document.getElementById("searchbyauthorinput");
+let searchByAuthorLabel = document.getElementById("searchbyauthorlabel");
+
 
 
 searchForm.addEventListener("submit", searchHandler);
-
+authorSearchHandler();
