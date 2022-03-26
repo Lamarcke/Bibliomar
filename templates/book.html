@@ -22,6 +22,10 @@
     />
     <style>
 
+        .dbutton{
+            width: 30vw;
+        }
+
         .cover-img{
             width: 75vw;
             height: 50vh;
@@ -52,6 +56,10 @@
                 margin-bottom: 5vh;
             }
 
+            .dbutton{
+                width: 12vw;
+            }
+
         }
     </style>
 </head>
@@ -60,7 +68,9 @@
 <div class="container-fluid d-flex flex-wrap justify-content-center">
     <div class="row">
         <div class="col text-center">
-            <img src="../static/img/bibliologo.png" alt="">
+            <a href="/">
+                <img src="../static/img/bibliologo.png" alt="">
+            </a>
         </div>
     </div>
     <div class="break"></div>
@@ -113,33 +123,31 @@
 
                 <div class="break"></div>
 
-                <div class="">
+                <div class="bg-black ps-3 py-2 bg-opacity-75 rounded-5">
                     <p class="lead fw-bold">Escolha um servidor para download:</p>
-                    <div class="d-flex flex-row flex-wrap justify-content-start">
-                        <a class="btn btn-primary btn-rounded mb-1" href="{{ d_links["GET"] }}">
-                        GET
-                    </a>
-                    <a class="btn btn-primary btn-rounded mb-1" href="{{ d_links["Cloudflare"] }}">
-                        Cloudflare
-                    </a>
-                    <a class="btn btn-primary btn-rounded mb-1" href="{{ d_links["IPFS.io"] }}">
-                        IPFS.io
-                    </a>
-                    <div class="break"></div>
-                    <a class="btn btn-primary btn-rounded mb-1" href="{{ d_links["Infura"] }}">
-                        Infura
-                    </a>
-                    <a class="btn btn-primary btn-rounded mb-1" href="{{ d_links["Infura"] }}">
-                        Pinata
-                    </a>
+                    <div class="d-flex flex-row flex-wrap justify-content-lg-center">
+                        <a class="dbutton btn btn-secondary btn-rounded mb-1 me-1" href="{{ d_links["Cloudflare"] }}">
+                            Cloudflare
+                        </a>
+                        <a class="dbutton btn btn-secondary btn-rounded mb-1 me-1" href="{{ d_links["IPFS.io"] }}">
+                            IPFS.io
+                        </a>
+                        <div class="break"></div>
+                        <a class="dbutton btn btn-secondary btn-rounded mb-1 me-1" href="{{ d_links["Infura"] }}">
+                            Infura
+                        </a>
+                        <a class="dbutton btn btn-secondary btn-rounded mb-1 me-1" href="{{ d_links["Infura"] }}">
+                            Pinata
+                        </a>
+                        <div class="break"></div>
+                        <span class="mt-1">Baixei meu livro, <a class="text-secondary" href="/newhere">e agora?</a></span>
+                        <div class="break"></div>
                     </div>
 
 
                 </div>
 
-                <div class="break"></div>
-                <p class="">Baixei meu livro, <a class="text-secondary" href="/newhere">e agora?</a></p>
-                <div class="break"></div>
+
 
 
 

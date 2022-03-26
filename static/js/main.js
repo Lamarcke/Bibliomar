@@ -77,6 +77,8 @@ const moreInfoHandler = (moreInfoElement, bookInfo) => {
 
 const dataHandler = async (data) => {
     clearResultsDiv();
+    /* Only removes the newhere button if the query returns something */
+    newhere.remove();
     let resultsdiv = document.createElement("div");
     resultsdiv.id = "resultsdiv";
     resultsdiv.className = "d-flex flex-wrap flex-row justify-content-center mt-5";
@@ -161,12 +163,17 @@ const dataHandler = async (data) => {
         bookCaption.append(moreInfoDiv);
         bookFigure.append(bookImg, bookCaption);
 
-        /* This freezes the event loop for x ms, so it's bad practice.
+        /* The sleep function freezes the event loop for x ms, so it's bad practice.
         * It's used to avoid messing with the backend and being blocked from libgenrocks.
         * In the context of this specific app, it works.
         * The for loop will wait for 2000ms BEFORE trying to get the book's cover, the function iteself
-        * may take longer than this.*/
-        await sleep(2000)
+        * may take longer than this. */
+
+        if (i !== data.length){
+            /* Doing this removes the 2 sec waiting time after the last request. */
+            await sleep(2000)
+        }
+
 
     }
     loadingSpinner.remove()
@@ -179,10 +186,9 @@ const dataHandler = async (data) => {
 
 
 
-const searchHandler = (element) => {
-    element.preventDefault();
+const searchHandler = (evt) => {
+    evt.preventDefault();
     clearResultsDiv();
-    newhere.remove();
     let resultsdiv = document.createElement("div");
     resultsdiv.id = "resultsdiv";
     resultsdiv.className = "d-flex flex-wrap flex-row justify-content-center mt-5";

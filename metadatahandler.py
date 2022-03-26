@@ -48,8 +48,8 @@ def resolve_metadata(mirror1, md5):
     # Removes "Description:" from the book's description.
     desc = re.sub("Description:", "", descdiv)
     download_links = {link.string: link["href"] for link in links}
-    # Uses libgenrock's get for backup, since sometimes all servers on Liblol are down.
-    download_links["GET"] = "https://libgen.rocks/get.php?md5=" + md5
+    # Removes the GET because it redirects to librarylol.
+    download_links.pop("GET")
     return download_links, desc
 
 
