@@ -27,7 +27,7 @@ const errorHandler = (er) => {
 
     if (er.status === 400){
         errorP.className = "text-warning mt-5";
-        errorP.innerText = "Opa, não consegui encontrar nada com esses termos. Tente novamente.";
+        errorP.innerText = "Opa, não consegui encontrar nada com esses termos. Que tal procurar em outra categoria ou formato?";
     }
     else if (er.status === 500){
         errorP.className = "text-danger mt-5";

@@ -72,6 +72,9 @@ def libsearch(query: str, format_: str, searchby: str, searchcat: str, searchlan
 
     # grab-from-libgen uses different names for the "sort" function, depending on topic.
     # the fiction search has no "res" parameter.
+    if format_ == "pdf":
+        print("pdf")
+        format_ = format_.upper()
     if searchcat == "fiction":
         # Fiction search uses "authors" as criteria for author search.
         if searchby == "author":
@@ -96,17 +99,16 @@ def libsearch(query: str, format_: str, searchby: str, searchcat: str, searchlan
     try:
         lbs = LibgenSearch(searchcat, **params)
     except IndexError:
-        return None
+        return 400
 
     # Libgen results, returns an OrderedDict:
-    lbr = lbs.get_results()
     try:
         lbr = lbs.get_results()
         if len(lbr) == 0:
-            return None
+            return 400
 
     except IndexError:
-        return None
+        return 400
 
     # Returns filtered results
     if searchcat == "fiction":

@@ -19,9 +19,11 @@ libup = True
 def libcheck():
     # This function checks if libgen is down. For some reason I was using threads for this, but it's better
     # to just run this every search call. It's more resource-heavy tho.
+    # Making this request without a valid header will return an 503 error.
     global libup
     try:
-        test = requests.head("https://libgen.rocks/", headers=headers,timeout=(5, 24))
+        test = requests.head("https://libgen.rocks/", headers=headers, timeout=(5, 24))
+        # This makes 503 raises an HTTPError Exception.
         test.raise_for_status()
         libup = True
         print("Libgenrocks is fine.")
@@ -57,9 +59,9 @@ def resolve_cover(md5):
     # If you make too many requests, libgenrocks will temporarily block you.
     # This scrapes for a single cover link, so use it with caution.
     # 1500-2000ms between each call is probably safe.
-    # It also scrapes for 3lib if librock is down.
+    # It also scrapes for 3lib if librock is down. Must run libcheck before this.
     # I personally believe it's better to send an empty cover than to keep the user waiting.
-    # Since I'm using heroku's free tier as a hosting solution, the timeout needs a lot of headroom.
+    # Making this request without a valid header will return an 503 error.
 
     global libup
     librock = "https://libgen.rocks/ads.php?md5=" + md5

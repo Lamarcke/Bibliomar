@@ -34,6 +34,8 @@ def search():
     if list_ is None:
         print("List is none on endpoint.")
         abort(400)
+    if list_ == 400:
+        abort(400)
 
     list_json = json.dumps(list_)
     response = make_response(list_json)
