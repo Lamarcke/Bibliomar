@@ -3,6 +3,10 @@ import requests
 import re
 
 MIRROR_SOURCES = ["GET", "Cloudflare", "IPFS.io", "Infura", "Pinata"]
+headers = {
+        'User-Agent': 'Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 '
+                      'Safari/537.36',
+    }
 libup = True
 
 
@@ -17,7 +21,8 @@ def libcheck():
     # to just run this every search call. It's more resource-heavy tho.
     global libup
     try:
-        requests.head("https://libgen.rocks/", timeout=(5, 24))
+        test = requests.head("https://libgen.rocks/", headers=headers,timeout=(5, 24))
+        test.raise_for_status()
         libup = True
         print("Libgenrocks is fine.")
     except (requests.exceptions.Timeout, requests.exceptions.ConnectionError, requests.exceptions.HTTPError) as err:
@@ -64,10 +69,10 @@ def resolve_cover(md5):
     # Tries librock, if it's down or too slow, uses 3lib instead.
     if libup:
         try:
-            page = requests.get(librock, timeout=27)
+            page = requests.get(librock, headers=headers, timeout=27)
         except requests.exceptions.HTTPError:
             print("Librocks is down, even if libcheck didn't say so.")
-            page = requests.get(_3lib, timeout=27)
+            page = requests.get(_3lib, headers=headers, timeout=27)
             libup = False
 
     else:
