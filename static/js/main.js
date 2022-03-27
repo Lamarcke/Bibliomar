@@ -205,7 +205,7 @@ const resultsHandler = async (data, lengthStart, lengthEnd) => {
         * The for loop will wait for 2000ms BEFORE trying to get the book's cover, the function iteself
         * may take longer than this. */
 
-        if (i !== data.length){
+        if (i !== lengthEnd){
             /* Doing this removes the 2 sec waiting time after the last request. */
             await sleep(2000)
         }
@@ -225,7 +225,7 @@ const paginationHandler = (data) => {
     clearPaginationDiv();
     let paginationDiv = document.createElement("div");
     paginationDiv.id = "paginationdiv"
-    paginationDiv.className = "d-flex flex-row justify-content-center";
+    paginationDiv.className = "d-flex flex-row justify-content-center mt-3";
     let paginationNav = document.createElement("nav");
     let paginationUl = document.createElement("ul");
     paginationUl.className = "pagination";

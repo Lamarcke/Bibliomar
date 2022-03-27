@@ -22,7 +22,7 @@ def libcheck():
     # Making this request without a valid header will return an 503 error.
     global libup
     try:
-        test = requests.head("https://libgen.rocks/", headers=headers, timeout=(5, 24))
+        test = requests.head("https://libgen.rocks/", headers=headers, timeout=(5, 16))
         # This makes 503 raises an HTTPError Exception.
         test.raise_for_status()
         libup = True
@@ -33,14 +33,14 @@ def libcheck():
         libup = False
 
 
-def resolve_metadata(mirror1, md5):
+def resolve_metadata(mirror1):
     # Uses a librarylol link to take the download links.
     # It also scrapes the book's description.
     # Ideally, this should only be done once the users actually wants to download a book.
     # It needs to be done periodically, since librarylol will block if you abuse it.
     # 2000ms between each call is probably safe.
 
-    page = requests.get(mirror1)
+    page = requests.get(mirror1, headers=headers)
     soup = BeautifulSoup(page.text, "html.parser")
     links = soup.find_all("a", string=MIRROR_SOURCES)
     # Selects the last div, which is the description div.

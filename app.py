@@ -30,6 +30,7 @@ def search():
     # Checks if libraryrocks is down when the user searchs. It will then be used by the
     # cover service.
     libcheck()
+    session.clear()
     list_ = search_handler(request.get_json())
     if list_ is None:
         print("List is none on endpoint.")
@@ -49,7 +50,7 @@ def book(md5):
         request_data = request.get_json()
         request_data["extension"] = request_data["extension"].upper()
         session["book_info"] = request_data
-        metadata = resolve_metadata(request_data["mirror1"], md5)
+        metadata = resolve_metadata(request_data["mirror1"])
         session["d_links"] = metadata[0]
         session["book_desc"] = metadata[1]
         return make_response("Ok")
