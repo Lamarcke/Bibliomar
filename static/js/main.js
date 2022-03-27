@@ -92,7 +92,7 @@ const moreInfoHandler = (moreInfoElement, bookInfo) => {
 
     moreInfoElement.addEventListener("click", (evt) => {
         evt.preventDefault()
-        fetch(`/book/${bookInfo["md5"]}`, {
+        fetch(`/book/`, {
             method: "POST",
             body: JSON.stringify(bookInfo),
             headers: {
@@ -101,7 +101,7 @@ const moreInfoHandler = (moreInfoElement, bookInfo) => {
 
         }).then((r) => {
             if (r.ok){
-                return window.location.href = `/book/${bookInfo["md5"]}`
+                return window.location.href = `/book/`
             }
         })
 

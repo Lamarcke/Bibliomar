@@ -44,8 +44,8 @@ def search():
     return response
 
 
-@app.route('/book/<md5>', methods=["GET", "POST"])
-def book(md5):
+@app.route('/book/', methods=["GET", "POST"])
+def book():
     if request.method == "POST":
         request_data = request.get_json()
         request_data["extension"] = request_data["extension"].upper()
