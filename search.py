@@ -24,6 +24,17 @@ def nonfiction_filter(lbr, format_, searchcat, searchlang):
         # verify if it's queried language
         if lang == searchlang:
 
+            if format_ == "any":
+                # If format is "any", adds to results without checking for format.
+
+                md5 = re.sub('[\\Wa-z]', "", value["mirror1"])
+                value["category"] = searchcat
+                value["md5"] = md5
+                results.append(value)
+                # "continues" this loop without running the rest of the code
+                continue
+
+            # if format is not "any" code.
             # verify extension regex, else return None
             vex = re.search(f"{format_}", value["extension"], re.IGNORECASE)
 
@@ -77,6 +88,8 @@ def libsearch(query: str, format_: str, searchby: str, searchcat: str, searchlan
         # Fiction search uses "authors" as criteria for author search.
         if searchby == "author":
             searchby = "authors"
+        if format_ == "any":
+            format_ = ""
         params = {
             "q": query,
             "language": lang,
@@ -86,12 +99,12 @@ def libsearch(query: str, format_: str, searchby: str, searchcat: str, searchlan
     else:
         # if searchcat == "sci-tech"
         # "res" stands for results per page.
+        # "res" only works on the newer version of grab-from-libgen.
         # Page is going to be used if the filtered results returns none.
         # Page must be a string.
         params = {
             "q": query,
             "language": lang,
-            "format": format_,
             "column": searchby,
             "res": "100"
         }

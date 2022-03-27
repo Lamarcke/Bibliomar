@@ -42,7 +42,7 @@ const authorSearchHandler = () => {
 }
 
 /* Surprisingly, handles errors. */
-const errorHandler = (er) => {
+const errorHandler = (res) => {
 
     clearResultsDiv();
     clearPaginationDiv();
@@ -52,12 +52,18 @@ const errorHandler = (er) => {
     resultsRow.append(resultsdiv);
     let errorP = document.createElement("p");
 
-    if (er.status === 400){
+    if (res.status === 400){
         errorP.className = "text-warning mt-5";
         errorP.innerText = "Opa, não consegui encontrar nada com esses termos. Que tal procurar em outra categoria ou formato?";
     }
 
-    else if (er.status === 500){
+    else if (res.status === 401){
+        errorP.className = "text-danger mt-5";
+        errorP.innerText = "Ops, ocorreu um erro ao conectar ao servidor de download. " +
+            "Verifique sua conexão e tente novamente.";
+    }
+
+    else if (res.status === 500){
         errorP.className = "text-danger mt-5";
         errorP.innerText = "Ops, algo deu errado. Verifique sua conexão e tente novamente.";
 
@@ -101,8 +107,9 @@ const moreInfoHandler = (moreInfoElement, bookInfo) => {
 
         }).then((r) => {
             if (r.ok){
-                return window.location.href = `/book/`
+                return window.open("/book/", "_blank")
             }
+            return errorHandler(r)
         })
 
 
@@ -148,15 +155,23 @@ const resultsHandler = async (data, lengthStart, lengthEnd) => {
         let extension;
         let size;
 
+        /* For non-fiction results */
         if (data[i].hasOwnProperty("extension")) {
             extension = data[i]["extension"];
             size = data[i]["size"];
-
+        /* For fiction results */
         } else {
-            extension = data[i]["file"].match(/[PDFEUB]/g);
-            extension = extension.join("")
-            size = data[i]["file"].match(/[^\s\/PDFEUB]/g);
-            size = size.join("")
+            /* Matches everything before the / */
+            extension = data[i]["file"].match(/.*\//g);
+            extension = extension.join("");
+            /* Removes a space and / */
+            extension = extension.replace(" /", "");
+
+            /* Matches everything after the / */
+            size = data[i]["file"].match(/\/.*/g);
+            size = size.join("");
+            /* Removes / and a space */
+            size = size.replace("/ ", "")
         }
 
         let cover = await coverHandler(md5)
@@ -251,7 +266,7 @@ const paginationHandler = (data) => {
             paginationA.className = "page-link text-light paginationlinks"
             paginationA.innerText = `${pn}`
             paginationA.addEventListener("click", () => {
-                /* Removes the active class from all other pages */
+                /* Removes the active class from all others pages */
                 let pageItems = Array.from(document.getElementsByClassName("page-item"))
                 pageItems.forEach((el) => {
                     el.className = "page-item"
@@ -262,8 +277,7 @@ const paginationHandler = (data) => {
                 lengthE = data.length;
                 }
 
-                /* Changes this element's class to active.
-                * Since pn starts at 1 */
+                /* Changes this element's class to active. */
                 let thisPageIndex = x / 10
                 let thisPage = pageItems[thisPageIndex]
                 thisPage.className = "page-item active"
@@ -288,6 +302,7 @@ const paginationHandler = (data) => {
 const searchHandler = (evt) => {
     evt.preventDefault();
     clearResultsDiv();
+    clearPaginationDiv();
     let resultsdiv = document.createElement("div");
     resultsdiv.id = "resultsdiv";
     resultsdiv.className = "d-flex flex-wrap flex-row justify-content-center mt-5";

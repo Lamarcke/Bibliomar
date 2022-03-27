@@ -33,6 +33,10 @@
     />
     <style>
 
+        .searchfield{
+            width: 75%;
+        }
+
         .disclaimer{
             width: 90vw;
         }
@@ -61,6 +65,11 @@
         }
 
         @media screen and (min-width: 600px){
+
+            .searchfield{
+                width: 50%;
+            }
+
             .resultimg{
                 width: 25vw;
                 height: 70vh;
@@ -100,34 +109,31 @@
     </div>
     <form id="searchform" class="">
         <div class="row d-flex flex-row justify-content-center">
-            <div class="col-lg-3 col-4">
-                <div id="format" class="">
-                    <label for="format">Formato do arquivo:</label>
-                    <div class="form-check form-check-inline">
-                        <input id="formatepub" value="epub" class="form-check-input" name="format" type="radio" checked>
-                        <label for="formatepub">EPUB</label>
+            <div class="col-lg-2 col-5">
+                <div>
+
+                    <label class="" for="searchcat">Categoria:</label>
+                    <div class="form-check form-check">
+                        <input type="radio" value="sci-tech" class="form-check-input" name="searchcat" id="searchcatnonfiction" checked>
+                        <label for="searchcatnonfiction">Não-ficção</label>
                     </div>
-                    <div class="form-check form-check-inline">
-                        <input id="formatpdf" value="pdf" class="form-check-input" name="format" type="radio">
-                        <label for="formatpdf">PDF</label>
-                    </div>
-                    <div class="form-check form-check-inline">
-                        <input id="formatpdf" value="mobi" class="form-check-input" name="format" type="radio">
-                        <label for="formatpdf">MOBI</label>
+                    <div class="form-check form-check">
+                        <input type="radio" value="fiction" class="form-check-input" name="searchcat" id="searchcatfiction">
+                        <label for="searchcatfiction">Ficção</label>
                     </div>
 
                 </div>
 
             </div>
 
-            <div class="col-lg-3 col-4">
+            <div class="col-lg-2 col-5">
                 <div id="searchby" class="">
                     <label for="searchby">Pesquisar por:</label>
-                    <div class="form-check form-check-inline">
+                    <div class="form-check form-check">
                         <input type="radio" value="title" class="form-check-input" name="searchby" id="searchbytitle" checked>
                         <label for="searchbytitle">Título</label>
                     </div>
-                    <div class="form-check form-check-inline">
+                    <div class="form-check form-check">
                         <input type="radio" value="author" class="form-check-input" name="searchby" id="searchbyauthorinput" disabled>
                         <label id="searchbyauthorlabel" class="text-muted" for="searchbyauthorinput">Autor</label>
                     </div>
@@ -142,23 +148,21 @@
 
         <div class="row mt-4 d-flex flex-row justify-content-center">
 
-            <div class="col-lg-3 col-5">
-                <div id="searchcat" class="">
+            <div class="col-lg-2 col-5">
 
-                    <label class="" for="searchcat">Categoria:</label>
-                    <div class="form-check form-check-inline">
-                        <input type="radio" value="sci-tech" class="form-check-input" name="searchcat" id="searchcatnonfiction" checked>
-                        <label for="searchcatnonfiction">Não-ficção</label>
-                    </div>
-                    <div class="form-check form-check-inline">
-                        <input type="radio" value="fiction" class="form-check-input" name="searchcat" id="searchcatfiction">
-                        <label for="searchcatfiction">Ficção</label>
-                    </div>
+                <label for="format">Formato:</label>
+                <select class="form-control form-select-sm" name="format" id="format">
+                    <option value="any" selected>TODOS</option>
+                    <option value="epub">EPUB</option>
+                    <option value="pdf">PDF</option>
+                    <option value="mobi">MOBI</option>
 
-                </div>
+                </select>
+
+
             </div>
 
-            <div class="col-lg-3 col-4">
+            <div class="col-lg-2 col-5">
 
                 <label class="" for="searchlang">Linguagem:</label>
 
@@ -173,10 +177,10 @@
 
         </div>
 
-        <div class="row mt-5 d-flex flex-wrap flex-row justify-content-lg-end justify-content-center">
-            <div class="col-10">
-                <div class="input-group">
-                    <div class="form-outline w-75">
+        <div class="row mt-5">
+            <div class="col">
+                <div class="input-group d-flex flex-wrap flex-row justify-content-lg-center justify-content-center">
+                    <div class="form-outline searchfield">
                         <input type="search" id="searchfield" class="form-control text-light">
                         <label class="form-label text-light" for="searchfield">Procurar livro</label>
                     </div>

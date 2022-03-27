@@ -1,9 +1,12 @@
-from flask import Flask, render_template, request, make_response, abort, session
+from flask import Flask, render_template, request, make_response, abort, session, after_this_request
 from metadatahandler import resolve_cover, resolve_metadata, libcheck
 from search import search_handler
 from os import urandom
-import threading
 import json
+
+# Huge thanks for willmeyers from grab-convert-from-libgen
+# https://github.com/willmeyers/grab-convert-from-libgen
+# Without your work, this project would not be possible.
 
 app = Flask(__name__)
 app.secret_key = urandom(32)
@@ -30,10 +33,10 @@ def search():
     # Checks if libraryrocks is down when the user searchs. It will then be used by the
     # cover service.
     libcheck()
+    # Clear the session to avoid bugs.
     session.clear()
     list_ = search_handler(request.get_json())
     if list_ is None:
-        print("List is none on endpoint.")
         abort(400)
     if list_ == 400:
         abort(400)
@@ -50,20 +53,35 @@ def book():
         request_data = request.get_json()
         request_data["extension"] = request_data["extension"].upper()
         session["book_info"] = request_data
+        # Scrapes download links and book's description.
         metadata = resolve_metadata(request_data["mirror1"])
-        session["d_links"] = metadata[0]
+        if metadata == 401:
+            abort(401)
+        session["book_dlinks"] = metadata[0]
         session["book_desc"] = metadata[1]
         return make_response("Ok")
 
-    if session["book_info"] and session["d_links"]:
+    # if request.method == "GET"
+    if session["book_info"] and session["book_dlinks"]:
+        book_info = session["book_info"]
+        book_dlinks = session["book_dlinks"]
+        book_desc = session["book_desc"]
         # If the user has both session cookies, then render the page.
 
-        if session["book_desc"] is None:
-            session["book_desc"] = "Sem descrição."
+        if book_desc == "" or None:
+            book_desc = "Sem descrição."
 
-        return render_template("book.html", book_info=session["book_info"], d_links=session["d_links"],
-                               book_desc=session["book_desc"])
-    return abort(400)
+        if book_info["language"] == "Portuguese":
+            book_info["language"] = "Português"
+
+        else:
+            # if book_info["language"] == "English"
+            book_info["language"] = "Inglês"
+
+        return render_template("book.html", book_info=book_info, d_links=book_dlinks,
+                               book_desc=book_desc)
+
+    return abort(401)
 
 
 @app.route('/newhere')
