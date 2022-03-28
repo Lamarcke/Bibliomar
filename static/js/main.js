@@ -54,7 +54,7 @@ const errorHandler = (res) => {
 
     if (res.status === 400){
         errorP.className = "text-warning mt-5";
-        errorP.innerText = "Opa, não consegui encontrar nada com esses termos. Que tal procurar em outra categoria ou formato?";
+        errorP.innerText = "Opa, não conseguimos encontrar nada com esses termos. Que tal procurar em outra categoria ou formato?";
     }
 
     else if (res.status === 401){

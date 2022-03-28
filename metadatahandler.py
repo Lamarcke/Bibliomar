@@ -11,7 +11,7 @@ librockup = True
 
 
 def libcheck():
-    # This function checks if libgen is down. For some reason I was using threads for this, but it's better
+    # This function checks if libgenrocks is down. For some reason I was using threads for this, but it's better
     # to just run this every search call. It's more resource-heavy tho.
     # Making this request without a valid header will return an 503 error.
     global librockup
@@ -20,12 +20,10 @@ def libcheck():
         # This makes 503 raises an HTTPError Exception.
         test.raise_for_status()
         librockup = True
-        return "libup"
     except (requests.exceptions.Timeout, requests.exceptions.ConnectionError, requests.exceptions.HTTPError) as err:
         print(err)
         print("Libgenrocks is down, too slow or can't handle the request. Using 3lib.")
         librockup = False
-        return "libdown"
 
 
 # These very useful function are an altered excerpt from libgen-api, from harrison-broadbent.

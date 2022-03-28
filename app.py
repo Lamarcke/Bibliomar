@@ -1,3 +1,4 @@
+import werkzeug.exceptions
 from flask import Flask, render_template, request, make_response, abort, session, after_this_request
 from metadatahandler import resolve_cover, resolve_metadata, libcheck
 from search import search_handler
@@ -10,6 +11,12 @@ import json
 
 app = Flask(__name__)
 app.secret_key = urandom(32)
+
+
+@app.errorhandler(werkzeug.exceptions.InternalServerError)
+def internal_error(e):
+    print(e)
+    return render_template("500.html"), 500
 
 
 @app.route('/')
@@ -30,8 +37,7 @@ def cover(md5):
 
 @app.route('/search', methods=["GET", "POST"])
 def search():
-    # Checks if libraryrocks is down when the user searchs. It will then be used by the
-    # cover service.
+    # Checks if libgenrocks is down.
     libcheck()
     # Clear the session to avoid bugs.
     session.clear()
@@ -59,7 +65,7 @@ def book():
             abort(401)
         session["book_dlinks"] = metadata[0]
         session["book_desc"] = metadata[1]
-        return make_response("Ok")
+        return make_response("Ok"), 200
 
     # if request.method == "GET"
     if session["book_info"] and session["book_dlinks"]:
