@@ -91,6 +91,7 @@ def libsearch(query: str, format_: str, searchby: str, searchcat: str, searchlan
             searchby = "authors"
         if format_ == "any":
             format_ = ""
+
         params = {
             "q": query,
             "language": lang,

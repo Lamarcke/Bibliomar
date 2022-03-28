@@ -100,10 +100,13 @@
     <!--- Header div --->
 
     <div class="row">
-        <div class="col text-center">
+        <div class="col d-flex flex-wrap justify-content-center">
             <a href="/">
                 <img src="../static/img/bibliologo.png" alt="Logo do Bibliomar">
             </a>
+
+            <div class="break"></div>
+
             <p class="lead text-secondary">
                 www.bibliomar.site
             </p>
@@ -189,7 +192,7 @@
 
         <div class="row mt-5">
             <div class="col">
-                <div class="input-group d-flex flex-wrap flex-row justify-content-lg-center justify-content-center">
+                <div class="input-group d-flex flex-wrap flex-row justify-content-center">
                     <div class="form-outline searchfield">
                         <input type="search" id="searchfield" class="form-control text-light">
                         <label class="form-label text-light" for="searchfield">Procurar livro</label>
@@ -203,13 +206,19 @@
         </div>
     </form>
 
+    <div id="errorrow" class="row">
+
+    </div>
+
     <div id="resultsrow" class="row">
 
 
     </div>
+
     <div id="paginationrow" class="row">
 
     </div>
+
     <div class="row mt-5">
         <div class="col mt-5 d-flex flex-row justify-content-center">
             <a id="newhere" class="btn btn-secondary" href="/newhere">Sou novo aqui</a>

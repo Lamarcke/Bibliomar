@@ -39,9 +39,9 @@ def search():
     session.clear()
     list_ = search_handler(request.get_json())
     if list_ is None:
-        abort(400)
+        return abort(400)
     if list_ == 400:
-        abort(400)
+        return abort(400)
 
     list_json = json.dumps(list_)
     response = make_response(list_json)
@@ -57,33 +57,48 @@ def book():
         session["book_info"] = request_data
         # Scrapes download links and book's description.
         metadata = resolve_metadata(request_data["mirror1"])
+
         if metadata == 401:
-            abort(401)
+            return abort(404)
+
         session["book_dlinks"] = metadata[0]
         session["book_desc"] = metadata[1]
+
+        if session["book_info"] is None:
+            return abort(404)
+
         return make_response("Ok"), 200
 
-    # if request.method == "GET"
-    if session["book_info"] and session["book_dlinks"]:
-        book_info = session["book_info"]
-        book_dlinks = session["book_dlinks"]
-        book_desc = session["book_desc"]
-        # If the user has both session cookies, then render the page.
+    else:
+        # if request.method == "GET"
+        try:
+            # Those two are the most important.
+            # If the user has both session cookies, then render the page.
+            book_info = session["book_info"]
+            book_dlinks = session["book_dlinks"]
+            # This one is secondary.
+            try:
+                book_desc = session["book_desc"]
+                if book_desc == "" or None:
+                    book_desc = "Sem descrição."
 
-        if book_desc == "" or None:
-            book_desc = "Sem descrição."
+            except AttributeError:
+                book_desc = "Sem descrição."
 
-        if book_info["language"] == "Portuguese":
-            book_info["language"] = "Português"
+            if book_info["language"] == "Portuguese":
+                book_info["language"] = "Português"
 
-        else:
-            # if book_info["language"] == "English"
-            book_info["language"] = "Inglês"
+            else:
+                # if book_info["language"] == "English"
+                book_info["language"] = "Inglês"
 
-        return render_template("book.html", book_info=book_info, d_links=book_dlinks,
-                               book_desc=book_desc)
-
-    return abort(401)
+            return render_template("book.html", book_info=book_info, d_links=book_dlinks,
+                                   book_desc=book_desc)
+        except AttributeError:
+            return abort(401)
+        except KeyError:
+            print("Keyerror")
+            return abort(401)
 
 
 @app.route('/newhere')

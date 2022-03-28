@@ -1,5 +1,6 @@
 
-
+/* Sleeping function */
+const sleep = ms => new Promise(r => setTimeout(r, ms));
 /* Deletes result and pagination div, basically */
 const clearResultsDiv = () => {
     try{
@@ -27,6 +28,19 @@ const clearPaginationDiv = () => {
     }
 }
 
+const clearErrorDiv = () => {
+    try{
+        let errorDiv = document.getElementById("errordiv");
+        errorDiv.remove();
+
+
+    }catch (e){
+        if (e === TypeError){
+            return console.log("ErrorDiv already empty.");
+        }
+    }
+}
+
 /* Disables author search for non-fiction */
 const authorSearchHandler = () => {
     searchCatFiction.addEventListener("click", () => {
@@ -43,39 +57,46 @@ const authorSearchHandler = () => {
 
 /* Surprisingly, handles errors. */
 const errorHandler = (res) => {
-
-    clearResultsDiv();
-    clearPaginationDiv();
-    let resultsdiv = document.createElement("div");
-    resultsdiv.id = "resultsdiv";
-    resultsdiv.className = "d-flex flex-row flex-wrap justify-content-center";
-    resultsRow.append(resultsdiv);
+    let errorDiv = document.createElement("div");
+    errorDiv.id = "errordiv";
+    errorDiv.className = "d-flex flex-row flex-wrap justify-content-center";
+    errorRow.append(errorDiv);
     let errorP = document.createElement("p");
 
     if (res.status === 400){
+        clearResultsDiv();
+        clearPaginationDiv();
+        clearErrorDiv();
         errorP.className = "text-warning mt-5";
         errorP.innerText = "Opa, não conseguimos encontrar nada com esses termos. Que tal procurar em outra categoria ou formato?";
     }
 
     else if (res.status === 401){
+        clearResultsDiv();
+        clearPaginationDiv();
+        clearErrorDiv();
         errorP.className = "text-danger mt-5";
         errorP.innerText = "Ops, ocorreu um erro ao conectar ao servidor de download. " +
             "Verifique sua conexão e tente novamente.";
     }
 
     else if (res.status === 500){
+        clearResultsDiv();
+        clearPaginationDiv();
+        clearErrorDiv();
         errorP.className = "text-danger mt-5";
         errorP.innerText = "Ops, algo deu errado. Verifique sua conexão e tente novamente.";
 
     }
 
     else{
+        clearResultsDiv();
+        clearPaginationDiv();
         errorP.className = "text-danger mt-5";
         errorP.innerText = "Ops, algo deu errado.";
-
     }
 
-    resultsdiv.append(errorP);
+    errorDiv.append(errorP);
 
 
 }
@@ -83,10 +104,20 @@ const errorHandler = (res) => {
 const coverHandler = async (md5) => {
     let ajax = await fetch(`/cover/${md5}`);
     if (ajax.ok){
-        return await ajax.text();
+        return ajax.text();
     }
     /* Returns blank image if the promise rejects */
     return "https://libgen.rocks/img/blank.png";
+}
+
+const redirectToBook = () => {
+    fetch("/book/")
+        .then((r) => {
+            if(r.ok){
+                return window.open("/book/", "_blank")
+            }
+            return errorHandler(r)
+    })
 }
 
 const moreInfoHandler = (moreInfoElement, bookInfo) => {
@@ -97,27 +128,33 @@ const moreInfoHandler = (moreInfoElement, bookInfo) => {
      */
 
     moreInfoElement.addEventListener("click", (evt) => {
+        let currentBook = bookInfo
+        clearErrorDiv()
         evt.preventDefault()
+        /* A click will trigger the fetch, and it will try itself two times before exiting. */
         fetch(`/book/`, {
             method: "POST",
-            body: JSON.stringify(bookInfo),
+            body: JSON.stringify(currentBook),
+            credentials: "same-origin",
             headers: {
-                "Content-type": "application/json"
+                "Content-type": "application/json",
             },
 
         }).then((r) => {
-            if (r.ok){
-                return window.open("/book/", "_blank")
+            if (r.ok) {
+                console.log("First r is ok")
+                return "ok"
             }
             return errorHandler(r)
-        })
-
+        }).then(redirectToBook)
 
     })
 }
 
 const resultsHandler = async (data, lengthStart, lengthEnd) => {
     clearResultsDiv();
+    clearErrorDiv()
+    /* Don't clean paginationDiv here. */
     /* Only removes the newhere button if the query returns something */
     newhere.remove();
     let resultsdiv = document.createElement("div");
@@ -140,7 +177,6 @@ const resultsHandler = async (data, lengthStart, lengthEnd) => {
     let break_ = document.createElement("div");
     break_.className = "break";
     resultsdiv.append(break_);
-    const sleep = ms => new Promise(r => setTimeout(r, ms));
     let bookInfo;
     for (let i = lengthStart; i < lengthEnd; i++) {
         if (i % 3 === 0) {
@@ -222,7 +258,7 @@ const resultsHandler = async (data, lengthStart, lengthEnd) => {
 
         if (i !== lengthEnd){
             /* Doing this removes the 2 sec waiting time after the last request. */
-            await sleep(2000)
+            await sleep(4000)
         }
 
 
@@ -238,6 +274,7 @@ const paginationHandler = (data) => {
     /* Shows pagination div */
     clearResultsDiv();
     clearPaginationDiv();
+    clearErrorDiv();
     let paginationDiv = document.createElement("div");
     paginationDiv.id = "paginationdiv"
     paginationDiv.className = "d-flex flex-row justify-content-center mt-3";
@@ -303,6 +340,7 @@ const searchHandler = (evt) => {
     evt.preventDefault();
     clearResultsDiv();
     clearPaginationDiv();
+    clearErrorDiv()
     let resultsdiv = document.createElement("div");
     resultsdiv.id = "resultsdiv";
     resultsdiv.className = "d-flex flex-wrap flex-row justify-content-center mt-5";
@@ -352,8 +390,10 @@ const searchHandler = (evt) => {
 let searchForm = document.getElementById("searchform");
 let searchField = document.getElementById("searchfield");
 let resultsRow = document.getElementById("resultsrow");
-let newhere = document.getElementById("newhere");
 let paginationRow = document.getElementById("paginationrow");
+let errorRow = document.getElementById("errorrow")
+let newhere = document.getElementById("newhere");
+
 let searchCatFiction = document.getElementById("searchcatfiction");
 let searchCatNonFiction = document.getElementById("searchcatnonfiction");
 let searchByAuthorInput = document.getElementById("searchbyauthorinput");

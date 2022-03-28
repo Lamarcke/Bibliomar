@@ -50,7 +50,13 @@ def resolve_metadata(mirror1):
     desc = re.sub("Description:", "", descdiv)
     download_links = {link.string: link["href"] for link in links}
     # Removes the GET because it redirects to librarylol.
-    download_links.pop("GET")
+    try:
+        download_links.pop("GET")
+    except AttributeError:
+        pass
+
+    if download_links is None:
+        return 401
     return download_links, desc
 
 
