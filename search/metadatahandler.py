@@ -1,12 +1,9 @@
+from grab_from_libgen.search_config import get_request_headers
 from bs4 import BeautifulSoup
 import requests
 import re
 
 MIRROR_SOURCES = ["GET", "Cloudflare", "IPFS.io", "Infura", "Pinata"]
-headers = {
-    'User-Agent': 'Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 '
-                  'Safari/537.36',
-}
 librockup = True
 
 
@@ -16,7 +13,7 @@ def libcheck():
     # Making this request without a valid header will return an 503 error.
     global librockup
     try:
-        test = requests.head("https://libgen.rocks/", headers=headers, timeout=(5, 16))
+        test = requests.head("https://libgen.rocks/", headers=get_request_headers(), timeout=(5, 16))
         # This makes 503 raises an HTTPError Exception.
         test.raise_for_status()
         librockup = True
@@ -39,7 +36,7 @@ def resolve_metadata(mirror1):
     # It needs to be done periodically, since librarylol will block if you abuse it.
     # 2000ms between each call is probably safe.
     try:
-        page = requests.get(mirror1, headers=headers, timeout=60)
+        page = requests.get(mirror1, headers=get_request_headers(), timeout=60)
         page.raise_for_status()
     except (requests.exceptions.Timeout, requests.exceptions.ConnectionError, requests.exceptions.HTTPError) as err:
         print("Error in Librarylol: ", err)
@@ -75,14 +72,14 @@ def resolve_cover(md5):
     # Tries librock, if it's down or too slow, uses 3lib instead.
     if librockup:
         try:
-            page = requests.get(librock, headers=headers, timeout=27)
+            page = requests.get(librock, headers=get_request_headers(), timeout=30)
         except requests.exceptions.HTTPError:
             print("Librocks is down, even if libcheck didn't say so.")
-            page = requests.get(_3lib, headers=headers, timeout=27)
+            page = requests.get(_3lib, headers=get_request_headers(), timeout=30)
             librockup = False
 
     else:
-        page = requests.get(_3lib, timeout=27)
+        page = requests.get(_3lib, headers=get_request_headers(), timeout=30)
     soup = BeautifulSoup(page.text, "html.parser")
 
     if librockup:

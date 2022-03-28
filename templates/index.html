@@ -14,6 +14,8 @@
      --->
     <meta charset="UTF-8">
     <title>Bibliomar</title>
+    <meta name="description" content="Buscador de livros, artigos acadêmicos, ebooks e mais. Usa o LibraryGenesis
+    como base">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
     <!-- Font Awesome -->
@@ -32,6 +34,10 @@
       rel="stylesheet"
     />
     <style>
+
+        #newhere{
+            margin-top: 5vh;
+        }
 
         .searchfield{
             width: 75%;
@@ -96,17 +102,22 @@
     <div class="row">
         <div class="col text-center">
             <a href="/">
-                <img src="../static/img/bibliologo.png" alt="">
+                <img src="../static/img/bibliologo.png" alt="Logo do Bibliomar">
             </a>
+            <p class="lead text-secondary">
+                www.bibliomar.site
+            </p>
 
         </div>
     </div>
+
     <div class="row">
         <div class="col text-center">
-            <h6 class="lead mb-7 ">Aos leitores ávidos e aos iniciantes: <br>
+            <h6 class="lead">Aos leitores ávidos e aos iniciantes: <br>
             Nossas mais sinceras boas-vindas.</h6>
         </div>
     </div>
+
     <form id="searchform" class="">
         <div class="row d-flex flex-row justify-content-center">
             <div class="col-lg-2 col-5">
@@ -201,20 +212,20 @@
     </div>
     <div class="row mt-5">
         <div class="col mt-5 d-flex flex-row justify-content-center">
-            <a id="newhere" class="position-relative top-100 btn btn-secondary" href="/newhere">Sou novo aqui</a>
+            <a id="newhere" class="btn btn-secondary" href="/newhere">Sou novo aqui</a>
         </div>
     </div>
 
-    <div class="row mt-5 mb-5">
+    <div class="row mt-2 mb-5">
         <div class="col d-flex justify-content-center">
-            <p class="text-muted position-relative top-0 disclaimer py-2 bg-dark bg-opacity-50 rounded text-center">
+            <p class="disclaimer p-2 bg-black bg-opacity-25 rounded-2 text-center text-muted">
                 O Bibliomar é um projeto educacional de incentivo a leitura. <br>
                 Todos os arquivos aqui disponibilizados são de autoria de terceiros, com todos os direitos reservados
                 e não estão hospedados em nossos servidores.<br><br>
                 Nós usamos o LibraryGenesis, a maior biblioteca digital do mundo, como base.<br>
-                Para entender mais sobre o projeto, clique <a href="/about">aqui</a>.
+                Entenda mais <a href="/about">sobre o projeto</a>.
                 Nosso código é aberto e pode ser visualizado a qualquer momento
-                <a href="https://github.com/Lamarcke/Bibliomar">aqui</a>.
+                <a href="https://github.com/Lamarcke/Bibliomar">código fonte</a>.
             </p>
         </div>
     </div>

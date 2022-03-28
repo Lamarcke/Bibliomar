@@ -1,4 +1,5 @@
 from grab_from_libgen import LibgenSearch
+from grab_from_libgen.exceptions import LibgenError
 import re
 
 
@@ -76,9 +77,9 @@ def fiction_filter(lbr, searchcat):
 
 def libsearch(query: str, format_: str, searchby: str, searchcat: str, searchlang: str):
     query = query.strip()
+    lbs = None
     # searchby is always either "title" or "author".
     # searchcat is always either "fiction" or "sci-tech".
-
     lang = searchlang.capitalize()
 
     # grab-from-libgen uses different names for the "sort" function, depending on topic.
@@ -99,9 +100,8 @@ def libsearch(query: str, format_: str, searchby: str, searchcat: str, searchlan
     else:
         # if searchcat == "sci-tech"
         # "res" stands for results per page.
-        # "res" only works on the newer version of grab-from-libgen.
-        # Page is going to be used if the filtered results returns none.
-        # Page must be a string.
+        # "res" only works on the newer version of grab-convert-from-libgen.
+
         params = {
             "q": query,
             "language": lang,
@@ -113,6 +113,8 @@ def libsearch(query: str, format_: str, searchby: str, searchcat: str, searchlan
         lbs = LibgenSearch(searchcat, **params)
     except IndexError:
         return 400
+    except LibgenError:
+        lbs = LibgenSearch(searchcat, **params)
 
     # Libgen results, returns an OrderedDict:
     try:
@@ -122,6 +124,7 @@ def libsearch(query: str, format_: str, searchby: str, searchcat: str, searchlan
 
     except IndexError:
         return 400
+
 
     # Returns filtered results
     if searchcat == "fiction":

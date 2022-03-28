@@ -1,13 +1,9 @@
 import werkzeug.exceptions
-from flask import Flask, render_template, request, make_response, abort, session, after_this_request
-from metadatahandler import resolve_cover, resolve_metadata, libcheck
-from search import search_handler
+from flask import Flask, render_template, request, make_response, abort, session
+from search.metadatahandler import resolve_cover, resolve_metadata, libcheck
+from search.search import search_handler
 from os import urandom
 import json
-
-# Huge thanks for willmeyers from grab-convert-from-libgen
-# https://github.com/willmeyers/grab-convert-from-libgen
-# Without your work, this project would not be possible.
 
 app = Flask(__name__)
 app.secret_key = urandom(32)
