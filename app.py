@@ -15,6 +15,12 @@ def internal_error(e):
     return render_template("500.html"), 500
 
 
+@app.errorhandler(werkzeug.exceptions.BadGateway)
+def internal_error(e):
+    print(e)
+    return render_template("500.html"), 502
+
+
 @app.route('/')
 def index():
     return render_template("index.html")
@@ -25,7 +31,6 @@ def cover(md5):
     try:
         cover_result = resolve_cover(md5)
         if cover_result is None:
-
             cover_result = {
                 "cover": "https://libgen.rocks/img/blank.png",
                 "elapsed_time": 5

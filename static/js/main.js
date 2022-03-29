@@ -100,16 +100,6 @@ const coverHandler = async (md5) => {
 
 }
 
-const redirectToBook = () => {
-    fetch("/book/")
-        .then((r) => {
-            if(r.ok){
-                return window.open("/book/", "_blank")
-            }
-
-    })
-}
-
 const moreInfoHandler = (moreInfoElement, bookInfo) => {
 
     /* This function makes a post request to save the clicked book info into a session cookie.
