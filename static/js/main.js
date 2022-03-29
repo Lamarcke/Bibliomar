@@ -142,7 +142,6 @@ const moreInfoHandler = (moreInfoElement, bookInfo) => {
 const resultsHandler = async (data, lengthStart, lengthEnd) => {
     clearResultsDiv();
     clearErrorDiv();
-    console.log(coverCache)
     /* Don't clean paginationDiv here. */
     /* Only removes the newhere button if the query returns something */
     newhere.remove();
@@ -202,18 +201,17 @@ const resultsHandler = async (data, lengthStart, lengthEnd) => {
             size = size.replace("/ ", "")
         }
 
-        let coverCached = coverCache.hasOwnProperty(md5)
+        let coverCached = coverCache.getItem(md5)
 
         if (coverCached){
-            cover = coverCache[md5]
+            cover = coverCache.getItem(md5)
 
         }else{
-
             let coverResults = await coverHandler(md5)
             cover = coverResults.cover
             elapsed_time = coverResults.elapsed_time
             /* Adds to cover cache */
-            coverCache[md5] = cover
+            coverCache.setItem(md5, cover)
         }
 
         bookInfo = {
@@ -270,7 +268,7 @@ const resultsHandler = async (data, lengthStart, lengthEnd) => {
         * This still gives the impression that the page loads almost instantly. */
 
         if (coverCached){
-            await sleep(750)
+            await sleep(500)
         }else{
             /* If not, wait a bit before making the next request */
             /* Doing this removes the x sec waiting time after the last request. */
@@ -296,7 +294,6 @@ const resultsHandler = async (data, lengthStart, lengthEnd) => {
     loadingP.className = "text-success";
     loadingP.innerText = "Tudo pronto. Boa leitura!"
     setTimeout(() => loadingDiv.remove(), 5000)
-
 }
 
 const paginationHandler = (data) => {
@@ -362,7 +359,7 @@ const paginationHandler = (data) => {
         lengthE = data.length;
     }
     /* Renders the first page. */
-    return resultsHandler(data, 0, lengthE, 1)
+    return resultsHandler(data, 0, lengthE)
 }
 
 const searchHandler = (evt) => {
@@ -389,27 +386,40 @@ const searchHandler = (evt) => {
 
     let formData = new FormData(searchForm)
     let searchFieldValue = searchField.value
-    let jsonObject = {
+    let searchObject = {
         format: formData.get("format"),
         searchby: formData.get("searchby"),
         searchcat: formData.get("searchcat"),
         searchlang: formData.get("searchlang"),
         query: searchFieldValue
     }
+    let searchString = JSON.stringify(searchObject)
+    let searchCacheValue = searchCache.getItem(searchString)
+
+    /* If this search is cached (we save the exact same json object on the cache), runs this */
+    if(searchCacheValue){
+        let searchCacheParsed = JSON.parse(searchCacheValue)
+        /* Loads the cached request and avoids making a new request to the back-end. */
+        return paginationHandler(searchCacheParsed)
+    }
 
     fetch("/search", {
         method: "POST",
-        body: JSON.stringify(jsonObject),
+        body: searchString,
         headers: {
             "Content-type": "application/json"
         }
     }).then((r) => {
         if (r.ok){
-            return r.json()
+            return r.json();
         }
-        return errorHandler(r)
+        return errorHandler(r);
     }).then((data) => {
         if (data !== undefined){
+            /* Converts data object to String, so it's storable on the sessionCache */
+            let dataString = JSON.stringify(data)
+            /* Sets "searchString" : "dataString" on searchCache */
+            searchCache.setItem(searchString, dataString)
             return paginationHandler(data);
         }
     })
@@ -430,10 +440,10 @@ const authorSearchHandler = () => {
     })
 }
 
-/* The coverCache is basically a big ass dict, so that I don't need to mess with cookies.
-* Of course, it only lasts while this page (index.html) is open.
-* Both sessionStorage and localStorage are too much for this simple task. */
-let coverCache = {}
+/* The coverCache is now an localStorage object, it will persist between browser closes.
+* The searchCache only lasts as long as the browser is open. */
+let coverCache = window.localStorage
+let searchCache = window.sessionStorage
 let searchForm = document.getElementById("searchform");
 let searchField = document.getElementById("searchfield");
 let resultsRow = document.getElementById("resultsrow");
