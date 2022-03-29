@@ -41,22 +41,11 @@ const clearErrorDiv = () => {
     }
 }
 
-/* Disables author search for non-fiction */
-const authorSearchHandler = () => {
-    searchCatFiction.addEventListener("click", () => {
-        searchByAuthorInput.disabled = false
-        searchByAuthorLabel.className = ""
-
-    })
-
-    searchCatNonFiction.addEventListener("click", () => {
-        searchByAuthorInput.disabled = true
-        searchByAuthorLabel.className = "text-muted"
-    })
-}
-
 /* Surprisingly, handles errors. */
 const errorHandler = (res) => {
+    clearResultsDiv();
+    clearPaginationDiv();
+    clearErrorDiv();
     let errorDiv = document.createElement("div");
     errorDiv.id = "errordiv";
     errorDiv.className = "d-flex flex-row flex-wrap justify-content-center";
@@ -64,50 +53,51 @@ const errorHandler = (res) => {
     let errorP = document.createElement("p");
 
     if (res.status === 400){
-        clearResultsDiv();
-        clearPaginationDiv();
-        clearErrorDiv();
-        errorP.className = "text-warning mt-5";
+        errorP.className = "note note-warning text-dark mt-5";
         errorP.innerText = "Opa, não conseguimos encontrar nada com esses termos. Que tal procurar em outra categoria ou formato?";
     }
 
-    else if (res.status === 401){
-        clearResultsDiv();
-        clearPaginationDiv();
-        clearErrorDiv();
-        errorP.className = "text-danger mt-5";
-        errorP.innerText = "Ops, ocorreu um erro ao conectar ao servidor de download. " +
-            "Verifique sua conexão e tente novamente.";
-    }
-
     else if (res.status === 500){
-        clearResultsDiv();
-        clearPaginationDiv();
-        clearErrorDiv();
-        errorP.className = "text-danger mt-5";
+        errorP.className = "note note-danger text-dark mt-5";
         errorP.innerText = "Ops, algo deu errado. Verifique sua conexão e tente novamente.";
 
     }
 
+    else if (res.status === 501){
+        errorP.className = "note note-danger text-dark mt-5";
+        errorP.innerText = "Ops, ocorreu um erro ao conectar ao servidor de download. " +
+            "Verifique sua conexão e tente novamente.";
+    }
+
+    else if (res.status === 502){
+        errorP.className = "note note-danger text-dark mt-5";
+        errorP.innerText = "Ops, ocorreu um ao acessar as informações do seu livro. " +
+            "Por favor, realize a pesquisa novamente.";
+    }
+
     else{
-        clearResultsDiv();
-        clearPaginationDiv();
-        errorP.className = "text-danger mt-5";
+        errorP.className = "note note-danger text-dark mt-5";
         errorP.innerText = "Ops, algo deu errado.";
     }
 
-    errorDiv.append(errorP);
+    return errorDiv.append(errorP);
 
 
 }
 
 const coverHandler = async (md5) => {
     let ajax = await fetch(`/cover/${md5}`);
+    let ajaxtext
     if (ajax.ok){
-        return ajax.text();
+        return ajax.json();
+    }else{
+        /* Returns blank image if the promise rejects */
+        return {
+            "cover": "https://libgen.rocks/img/blank.png",
+            "elapsed_time": 5
+        }
     }
-    /* Returns blank image if the promise rejects */
-    return "https://libgen.rocks/img/blank.png";
+
 }
 
 const redirectToBook = () => {
@@ -116,7 +106,7 @@ const redirectToBook = () => {
             if(r.ok){
                 return window.open("/book/", "_blank")
             }
-            return errorHandler(r)
+
     })
 }
 
@@ -129,7 +119,7 @@ const moreInfoHandler = (moreInfoElement, bookInfo) => {
 
     moreInfoElement.addEventListener("click", (evt) => {
         let currentBook = bookInfo
-        clearErrorDiv()
+
         evt.preventDefault()
         /* A click will trigger the fetch, and it will try itself two times before exiting. */
         fetch(`/book/`, {
@@ -142,21 +132,33 @@ const moreInfoHandler = (moreInfoElement, bookInfo) => {
 
         }).then((r) => {
             if (r.ok) {
-                console.log("First r is ok")
-                return "ok"
+                return
             }
             return errorHandler(r)
-        }).then(redirectToBook)
+        }).then(() => {
+            fetch("/book/")
+                .then((r) => {
+                    if(r.ok){
+                        return window.open("/book/", "_blank")
+                    }
+                    return errorHandler(r)
+
+                })
+        })
 
     })
 }
 
 const resultsHandler = async (data, lengthStart, lengthEnd) => {
     clearResultsDiv();
-    clearErrorDiv()
+    clearErrorDiv();
+    console.log(coverCache)
     /* Don't clean paginationDiv here. */
     /* Only removes the newhere button if the query returns something */
     newhere.remove();
+    let bookInfo;
+    let cover;
+    let elapsed_time;
     let resultsdiv = document.createElement("div");
     resultsdiv.id = "resultsdiv";
     resultsdiv.className = "d-flex flex-wrap flex-row justify-content-center mt-5";
@@ -167,8 +169,8 @@ const resultsHandler = async (data, lengthStart, lengthEnd) => {
     loadingDiv.className = "d-flex flex-wrap flex-row justify-content-center"
     resultsdiv.append(loadingDiv)
     let loadingP = document.createElement("p");
-    loadingP.className = "text-info";
-    loadingP.innerText = "Estamos carregando seus livros, isso pode demorar um pouco...";
+    loadingP.className = "note note-info text-dark";
+    loadingP.innerText = "Estamos baixando as informações dos seus livros, isso pode demorar um pouco...";
     let loadingBreak = document.createElement("div");
     loadingBreak.className = "break";
     let loadingSpinner = document.createElement("p");
@@ -177,7 +179,7 @@ const resultsHandler = async (data, lengthStart, lengthEnd) => {
     let break_ = document.createElement("div");
     break_.className = "break";
     resultsdiv.append(break_);
-    let bookInfo;
+
     for (let i = lengthStart; i < lengthEnd; i++) {
         if (i % 3 === 0) {
             /* Every three iterations, and on the first one, execute this code that adds a break every 3 books. */
@@ -210,7 +212,19 @@ const resultsHandler = async (data, lengthStart, lengthEnd) => {
             size = size.replace("/ ", "")
         }
 
-        let cover = await coverHandler(md5)
+        let coverCached = coverCache.hasOwnProperty(md5)
+
+        if (coverCached){
+            cover = coverCache[md5]
+
+        }else{
+
+            let coverResults = await coverHandler(md5)
+            cover = coverResults.cover
+            elapsed_time = coverResults.elapsed_time
+            /* Adds to cover cache */
+            coverCache[md5] = cover
+        }
 
         bookInfo = {
             "title": data[i]["title"],
@@ -224,6 +238,10 @@ const resultsHandler = async (data, lengthStart, lengthEnd) => {
             "size": size
 
         }
+
+
+
+        /* Info that will not be sent to the backend */
 
         let bookFigure = document.createElement("figure");
         bookFigure.className = "figure";
@@ -251,15 +269,36 @@ const resultsHandler = async (data, lengthStart, lengthEnd) => {
         bookFigure.append(bookImg, bookCaption);
 
         /* The sleep function freezes the event loop for x ms, so it's bad practice.
-        * It's used to avoid messing with the backend and being blocked from libgenrocks.
+        * (it actually only blocks this for loop.)
+        * It's used to avoid messing with the backend and being blocked from 3lib or libgenrocks.
         * In the context of this specific app, it works.
-        * The for loop will wait for 2000ms BEFORE trying to get the book's cover, the function iteself
+        * The for loop will wait for x ms BEFORE trying to get the book's cover, the function iteself
         * may take longer than this. */
 
-        if (i !== lengthEnd){
-            /* Doing this removes the 2 sec waiting time after the last request. */
-            await sleep(4000)
+        /* Checks (again) if cover was already cached. */
+        /* Still waits a bit because 3lib/libgenrocks doesn't like when you load too many images at the same time...
+        * This still gives the impression that the page loads almost instantly. */
+
+        if (coverCached){
+            await sleep(750)
+        }else{
+            /* If not, wait a bit before making the next request */
+            /* Doing this removes the x sec waiting time after the last request. */
+            if (i !== lengthEnd){
+                if (elapsed_time <= 3){
+                    /* If the functions returns the cover in a less than or in a 3 seconds request
+                    * (this is calculated on the backend) then wait for 3000ms before making the next request. */
+                    await sleep(3000)
+                }else if (elapsed_time === 4){
+                    /* If it takes more time, still waits 1.5 sec, gotta be patient. */
+                    await sleep(1500)
+                }else{
+                    /* More than that, and just proceeds. */
+                }
+            }
         }
+
+
 
 
     }
@@ -304,6 +343,7 @@ const paginationHandler = (data) => {
             paginationA.innerText = `${pn}`
             paginationA.addEventListener("click", () => {
                 /* Removes the active class from all others pages */
+                let thisPn = pn
                 let pageItems = Array.from(document.getElementsByClassName("page-item"))
                 pageItems.forEach((el) => {
                     el.className = "page-item"
@@ -318,7 +358,7 @@ const paginationHandler = (data) => {
                 let thisPageIndex = x / 10
                 let thisPage = pageItems[thisPageIndex]
                 thisPage.className = "page-item active"
-                return resultsHandler(data, x, lengthE)
+                return resultsHandler(data, x, lengthE, thisPn)
             })
 
             paginationUl.append(paginationLi);
@@ -332,8 +372,7 @@ const paginationHandler = (data) => {
         lengthE = data.length;
     }
     /* Renders the first page. */
-    return resultsHandler(data, 0, lengthE)
-
+    return resultsHandler(data, 0, lengthE, 1)
 }
 
 const searchHandler = (evt) => {
@@ -350,7 +389,7 @@ const searchHandler = (evt) => {
     loadingDiv.className = "d-flex flex-wrap flex-row justify-content-center"
     resultsdiv.append(loadingDiv);
     let loadingP = document.createElement("p");
-    loadingP.className = "text-info";
+    loadingP.className = "note note-info text-dark";
     loadingP.innerText = "Estamos enviando sua solicitação ao servidor...";
     let loadingBreak = document.createElement("div");
     loadingBreak.className = "break";
@@ -387,13 +426,30 @@ const searchHandler = (evt) => {
 
 }
 
+/* Disables author search for non-fiction */
+const authorSearchHandler = () => {
+    searchCatFiction.addEventListener("click", () => {
+        searchByAuthorInput.disabled = false
+        searchByAuthorLabel.className = ""
+
+    })
+
+    searchCatNonFiction.addEventListener("click", () => {
+        searchByAuthorInput.disabled = true
+        searchByAuthorLabel.className = "text-muted"
+    })
+}
+
+/* The coverCache is basically a big ass dict, so that I don't need to mess with cookies.
+* Of course, it only lasts while this page (index.html) is open.
+* Both sessionStorage and localStorage are too much for this simple task. */
+let coverCache = {}
 let searchForm = document.getElementById("searchform");
 let searchField = document.getElementById("searchfield");
 let resultsRow = document.getElementById("resultsrow");
 let paginationRow = document.getElementById("paginationrow");
 let errorRow = document.getElementById("errorrow")
 let newhere = document.getElementById("newhere");
-
 let searchCatFiction = document.getElementById("searchcatfiction");
 let searchCatNonFiction = document.getElementById("searchcatnonfiction");
 let searchByAuthorInput = document.getElementById("searchbyauthorinput");

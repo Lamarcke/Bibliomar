@@ -23,12 +23,25 @@ def index():
 @app.route('/cover/<md5>')
 def cover(md5):
     try:
-        response = make_response(resolve_cover(md5))
-        if response is None:
-            return "https://libgen.rocks/img/blank.png"
+        cover_result = resolve_cover(md5)
+        if cover_result is None:
+
+            cover_result = {
+                "cover": "https://libgen.rocks/img/blank.png",
+                "elapsed_time": 5
+            }
+            return make_response(cover_result)
+
+        cover_json = json.dumps(cover_result)
+        response = make_response(cover_json)
         return response
+
     except TypeError:
-        return "https://libgen.rocks/img/blank.png"
+        cover_result = {
+            "cover": "https://libgen.rocks/img/blank.png",
+            "elapsed_time": 5
+        }
+        return cover_result
 
 
 @app.route('/search', methods=["GET", "POST"])
@@ -38,9 +51,8 @@ def search():
     # Clear the session to avoid bugs.
     session.clear()
     list_ = search_handler(request.get_json())
-    if list_ is None:
-        return abort(400)
-    if list_ == 400:
+
+    if list_ == 400 or None:
         return abort(400)
 
     list_json = json.dumps(list_)
@@ -58,14 +70,14 @@ def book():
         # Scrapes download links and book's description.
         metadata = resolve_metadata(request_data["mirror1"])
 
-        if metadata == 401:
-            return abort(404)
+        if metadata == 501:
+            return abort(501)
 
         session["book_dlinks"] = metadata[0]
         session["book_desc"] = metadata[1]
 
         if session["book_info"] is None:
-            return abort(404)
+            return abort(501)
 
         return make_response("Ok"), 200
 
@@ -95,10 +107,9 @@ def book():
             return render_template("book.html", book_info=book_info, d_links=book_dlinks,
                                    book_desc=book_desc)
         except AttributeError:
-            return abort(401)
+            return abort(502)
         except KeyError:
-            print("Keyerror")
-            return abort(401)
+            return abort(502)
 
 
 @app.route('/newhere')

@@ -4,23 +4,7 @@ import requests
 import re
 
 MIRROR_SOURCES = ["GET", "Cloudflare", "IPFS.io", "Infura", "Pinata"]
-librockup = True
-
-
-def libcheck():
-    # This function checks if libgenrocks is down. For some reason I was using threads for this, but it's better
-    # to just run this every search call. It's more resource-heavy tho.
-    # Making this request without a valid header will return an 503 error.
-    global librockup
-    try:
-        test = requests.head("https://libgen.rocks/", headers=get_request_headers(), timeout=(5, 16))
-        # This makes 503 raises an HTTPError Exception.
-        test.raise_for_status()
-        librockup = True
-    except (requests.exceptions.Timeout, requests.exceptions.ConnectionError, requests.exceptions.HTTPError) as err:
-        print(err)
-        print("Libgenrocks is down, too slow or can't handle the request. Using 3lib.")
-        librockup = False
+_3libup = True
 
 
 # These very useful function are an altered excerpt from libgen-api, from harrison-broadbent.
@@ -40,7 +24,7 @@ def resolve_metadata(mirror1):
         page.raise_for_status()
     except (requests.exceptions.Timeout, requests.exceptions.ConnectionError, requests.exceptions.HTTPError) as err:
         print("Error in Librarylol: ", err)
-        return 401
+        return 501
 
     soup = BeautifulSoup(page.text, "html.parser")
     links = soup.find_all("a", string=MIRROR_SOURCES)
@@ -60,46 +44,77 @@ def resolve_metadata(mirror1):
     return download_links, desc
 
 
+def libcheck():
+    # This function checks if libgenrocks is down. For some reason I was using threads for this, but it's better
+    # to just run this every search call. It's more resource-heavy tho.
+    # Making this request without a valid header will return an 503 error.
+    global _3libup
+    try:
+        test = requests.head("https://3lib.net/", headers=get_request_headers(), timeout=(6, 12))
+        # This makes 503 raises an HTTPError Exception.
+        test.raise_for_status()
+        _3libup = True
+    except (requests.exceptions.Timeout, requests.exceptions.ConnectionError, requests.exceptions.HTTPError) as err:
+        print(err)
+        print("3lib is down, too slow or can't handle the request. Using libgenrocks.")
+        _3libup = False
+
+
 def resolve_cover(md5):
-    # Uses a md5 to take the cover link from Libgenrocks.
+    # Uses a md5 to take the cover link from 3lib.
     # Librarylol uses CORS, so no scraping for covers on there.
-    # If you make too many requests, libgenrocks will temporarily block you.
+    # If you make too many requests, 3lib will temporarily block you.
+    # And so will libgenrocks.
+    # They also don't like when you load too many images at the same time. (e.g. using a cache)
     # This scrapes for a single cover link, so use it with caution.
     # 1500-2000ms between each call is probably safe.
     # It also scrapes for 3lib if librock is down. Must run libcheck() before this.
     # I personally believe it's better to send an empty cover than to keep the user waiting.
     # Making this request without a valid header will return an 503 error.
 
-    global librockup
+    global _3libup
     librock = "https://libgen.rocks/ads.php?md5=" + md5
     _3lib = "https://3lib.net/md5/" + md5
     page = None
 
-    # Tries librock, if it's down or too slow, uses 3lib instead.
-    if librockup:
+    # Tries 3lib, if it's down or too slow, uses libgenrocks instead.
+    if _3libup:
         try:
+            page = requests.get(_3lib, headers=get_request_headers(), timeout=20)
+        except (requests.exceptions.Timeout, requests.exceptions.ConnectionError, requests.exceptions.HTTPError) as err:
+            print("3lib is down... error is ", err)
             page = requests.get(librock, headers=get_request_headers(), timeout=30)
-        except requests.exceptions.HTTPError:
-            print("Librocks is down, even if libcheck didn't say so.")
-            page = requests.get(_3lib, headers=get_request_headers(), timeout=30)
-            librockup = False
+            _3libup = False
 
     else:
-        page = requests.get(_3lib, headers=get_request_headers(), timeout=30)
+        page = requests.get(librock, headers=get_request_headers(), timeout=30)
+
     soup = BeautifulSoup(page.text, "html.parser")
-
-    if librockup:
+    elapsed_time = int(page.elapsed.total_seconds())
+    if _3libup:
+        # if 3lib is up
+        cover = soup.find("img", {"class": "cover"})
         try:
-            cover = soup.find("img")
-            return "https://libgen.rocks" + cover["src"]
-        except KeyError:
-            return None
-    else:
-        # if libgenrocks is down
-        try:
-            cover = soup.find("img", {"class": "cover"})
             # 3lib returns a very small cover on the search page, this changes the url to render the bigger one.
             cover_url = re.sub("covers100", "covers299", cover["data-src"])
         except KeyError:
+            try:
+                cover_url = re.sub("covers100", "covers200", cover["data-src"])
+            except KeyError:
+                return None
+
+        if cover_url == "/img/cover-not-exists.png":
             return None
-        return cover_url
+    else:
+        # if 3lib is down
+        try:
+            cover = soup.find("img")
+            cover_url = "https://libgen.rocks" + cover["src"]
+        except KeyError:
+            return None
+
+    results = {
+        "cover": cover_url,
+        "elapsed_time": elapsed_time
+    }
+    return results

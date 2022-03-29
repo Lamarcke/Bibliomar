@@ -23,6 +23,10 @@
     />
     <style>
 
+        .book-item{
+            width: 100%;
+        }
+
         .dbutton{
             width: 30vw;
         }
@@ -85,39 +89,40 @@
 
     <section class="ms-lg-5 w-75">
         <div class="row">
-            <div class="col-lg-6 col-12 d-flex justify-content-center">
+            <div class="col-lg-6 col d-flex justify-content-center">
                 <img src="{{ book_info["cover"] }}" alt="https://libgen.rocks/img/blank.png" class="cover-img">
             </div>
-            <div class="col-lg-6 col-12 mt-5 mt-lg-0 d-flex flex-row flex-wrap align-content-start text-light lead">
-                <div class="lead">
+            <div class="col-lg-6 col mt-5 mt-lg-0 d-flex flex-row flex-wrap align-content-start text-light lead">
+
+                <div class="lead bg-black p-2 rounded-7 bg-opacity-75 text-light text-center mb-2 book-item">
                     <span class="fw-bold">Título: </span>
                     <p>{{ book_info["title"] }}</p>
                 </div>
 
                 <div class="break"></div>
 
-                <div class="lead">
+                <div class="lead bg-black p-2 rounded-7 bg-opacity-75 text-light text-center mb-2 book-item">
                     <span class="fw-bold">Autor(a): </span>
                     <p>{{ book_info["authors"] }}</p>
                 </div>
 
                 <div class="break"></div>
 
-                <div class="lead">
+                <div class="lead bg-black p-2 rounded-7 bg-opacity-75 text-light text-center mb-2 book-item">
                     <span class="fw-bold">Linguagem: </span>
                     <p>{{ book_info["language"] }}</p>
                 </div>
 
                 <div class="break"></div>
 
-                <div class="lead">
+                <div class="lead bg-black p-2 rounded-7 bg-opacity-75 text-light text-center mb-2 book-item">
                     <span class="fw-bold">Arquivo: </span>
                     <p>{{ book_info["extension"] }}, {{ book_info["size"] }}</p>
                 </div>
 
                 <div class="break"></div>
 
-                <div class="lead">
+                <div class="lead bg-black p-2 rounded-7 bg-opacity-75 text-light text-center mb-2 book-item">
                     <span class="fw-bold">Descrição: </span>
                     <p>{{ book_desc }}</p>
                 </div>
@@ -145,12 +150,7 @@
                         <div class="break"></div>
                     </div>
 
-
                 </div>
-
-
-
-
 
             </div>
             
@@ -159,9 +159,13 @@
     </section>
 
     <div class="row mt-5">
-        <div class="col d-flex justify-content-center">
-
-            <p class="bg-black p-2 rounded-7 bg-opacity-75 text-light">Nosso site lhe foi útil? Considere compartilhar com seus amigos, essa é a forma que o projeto tem de
+        <div class="col d-flex flex-wrap justify-content-center">
+            <span class="bg-black p-2 rounded-7 bg-opacity-75 text-light text-center mb-1">
+                <span class="fw-bold">MD5:</span> <span class="fst-italic">{{ book_info["md5"] }}</span><br>
+            </span>
+            <div class="break"></div>
+            <p class="bg-black p-2 rounded-7 bg-opacity-75 text-light text-center">Nosso site lhe foi útil? <br>
+                Considere compartilhar com seus amigos, essa é a forma que o projeto tem de
             continuar de pé.</p>
 
 
