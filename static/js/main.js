@@ -455,7 +455,5 @@ let searchCatNonFiction = document.getElementById("searchcatnonfiction");
 let searchByAuthorInput = document.getElementById("searchbyauthorinput");
 let searchByAuthorLabel = document.getElementById("searchbyauthorlabel");
 
-
-
 searchForm.addEventListener("submit", searchHandler);
 authorSearchHandler();
