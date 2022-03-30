@@ -36,3 +36,11 @@ nenhum resultado nesses primeiros 100 resultados, então a pesquisa aparece como
 Isso só é um problema durante as pesquisas de Autor, que normalmente são mais abrangentes. A pesquisa por autor foi desabilitada
 por este motivo.
 
+Com essas informações, pode-se dizer que o Bibliomar é um aplicativo rápido. 
+
+### Prova de conceito
+Esse site, aplicativo, e quase-API foi feito por um inicante, atualmente no 3o período de ADS.
+Muita coisa foi feita a mão. Apesar do uso do framework MDBootstrap (criado com base no Bootstrap 5), a maior parte da interação é feita de forma própria, e muitas vezes não da melhor forma. O melhor exemplo é a função de paginação. Funciona, guarda o cache da pesquisa, mas eu não gosto de ter de reinventar roda.
+Por exemplo, leia as funções `paginationHandler` e em seguida `resultsHandler`. Note como o código seria simplificado utilizando-se um simples método forEach().
+
+Apesar disso, esse é um projeto que tenho orgulho, e também é um marco: é um projeto que eu mesmo projetei, estudei, completei e agora está ao ar para quem tiver interesse.
