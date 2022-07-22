@@ -1,12 +1,14 @@
+# ABANDONADO
+Essa versão do projeto é desatualizada, e está acessível apenas para fins históricos.
+O [novo Bibliomar](https://github.com/Lamarcke/bibliomar-react) foi reescrito do zero, com tecnologias mais modernas.
+
+
 # Bibliomar
 Um projeto educacional para download de livros, textos e artigos usando o LibraryGenesis como base.
-# Atualização a caminho
-Algumas coisas não estão 100% no Bibliomar, e esses errors 500 significam que eu teria de reescrever o aplicativo todo de outra forma, e é isso que vou fazer:
-Bibliomar está sendo reescrito em React, usando o Biblioterra (uma API feita com FastAPI) como backend.
 
 
 Link para visualizar:\
-http://www.bibliomar.site
+http://bibliomar.herokuapp.com/
 
 Toda contribuição é bem-vinda.\
 Seja na forma de pull requests, ou na forma
